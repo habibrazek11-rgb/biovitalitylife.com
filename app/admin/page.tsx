@@ -18,10 +18,10 @@ async function getStats() {
       prisma.contactSubmission.count(),
       prisma.order.findMany({
         select: { total: true, status: true },
-      }),
+      }) as Promise<{ total: number; status: string }[]>,
     ])
 
-    const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0)
+    const totalRevenue = orders.reduce((sum: number, o) => sum + o.total, 0)
     const pendingOrders = orders.filter((o) => o.status === 'PENDING').length
 
     return { orderCount, customerCount, messageCount, totalRevenue, pendingOrders }

@@ -12,16 +12,17 @@ import Link from 'next/link'
 
 async function getStats() {
   try {
-    const [orderCount, customerCount, messageCount, orders] = await Promise.all([
+    const [orderCount, customerCount, messageCount, ordersRaw] = await Promise.all([
       prisma.order.count(),
       prisma.user.count({ where: { role: 'CUSTOMER' } }),
       prisma.contactSubmission.count(),
       prisma.order.findMany({
         select: { total: true, status: true },
-      }) as Promise<{ total: number; status: string }[]>,
+      }),
     ])
 
-    const totalRevenue = orders.reduce((sum: number, o) => sum + o.total, 0)
+    const orders = ordersRaw as { total: number; status: string }[]
+    const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0)
     const pendingOrders = orders.filter((o) => o.status === 'PENDING').length
 
     return { orderCount, customerCount, messageCount, totalRevenue, pendingOrders }

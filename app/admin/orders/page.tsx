@@ -12,14 +12,14 @@ const statusColors: Record<string, string> = {
 }
 
 export default async function AdminOrdersPage() {
-  const orders = await prisma.order.findMany({
+  const orders = (await prisma.order.findMany({
     include: {
       user: { select: { firstName: true, lastName: true, email: true } },
       items: true,
     },
     orderBy: { createdAt: 'desc' },
     take: 50,
-  })
+  })) as any[]
 
   return (
     <div className="p-6 lg:p-8">

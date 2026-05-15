@@ -1,6 +1,16 @@
 import { prisma } from '@/lib/db'
 import { Users } from 'lucide-react'
 
+interface Customer {
+  id: string
+  email: string
+  firstName: string | null
+  lastName: string | null
+  role: string
+  createdAt: Date
+  _count: { orders: number }
+}
+
 export default async function AdminCustomersPage() {
   const customers = await prisma.user.findMany({
     include: {
@@ -8,7 +18,7 @@ export default async function AdminCustomersPage() {
     },
     orderBy: { createdAt: 'desc' },
     take: 50,
-  })
+  }) as Customer[]
 
   return (
     <div className="p-6 lg:p-8">

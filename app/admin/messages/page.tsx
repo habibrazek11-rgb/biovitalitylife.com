@@ -2,10 +2,10 @@ import { prisma } from '@/lib/db'
 import { MessageSquare, Mail } from 'lucide-react'
 
 export default async function AdminMessagesPage() {
-  const messages = await prisma.contactSubmission.findMany({
+  const messages = (await prisma.contactSubmission.findMany({
     orderBy: { createdAt: 'desc' },
     take: 50,
-  })
+  })) as any[]
 
   return (
     <div className="p-6 lg:p-8">

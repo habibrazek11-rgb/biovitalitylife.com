@@ -6,6 +6,7 @@ import WhyBioVitality from '@/components/WhyBioVitality'
 import SimpleRitual from '@/components/SimpleRitual'
 import OrganicCertification from '@/components/OrganicCertification'
 import HowToUse from '@/components/HowToUse'
+import PrivateLabel from '@/components/PrivateLabel'
 import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
 import ToastProvider from '@/components/ui/ToastProvider'
@@ -31,8 +32,9 @@ export default function HomePage() {
         <HeroSection />
         <WhyBioVitality />
         <OrganicCertification />
-        <SimpleRitual />x²
+        <SimpleRitual />
         <HowToUse />
+        <PrivateLabel />
         <ContactSection />
       </main>
       <Footer />

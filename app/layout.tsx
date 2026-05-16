@@ -58,6 +58,15 @@ export const metadata: Metadata = {
     description: 'Premium organic prickly pear vinegar from Tunisia.',
   },
   robots: { index: true, follow: true },
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({

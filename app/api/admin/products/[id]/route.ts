@@ -12,6 +12,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const {
     name, line, price, currency, shortDescription, description,
     badge, images, benefits, howToUse, certifications, categoryId, inStock,
+    seoTitle, seoDescription,
   } = body
 
   const slug = name
@@ -34,8 +35,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       benefits: benefits || [],
       howToUse: howToUse || [],
       certifications: certifications || [],
-      categoryId: categoryId || null,
       inStock: inStock ?? true,
+      ...(categoryId
+        ? { category: { connect: { id: categoryId } } }
+        : { category: { disconnect: true } }),
     },
   })
 

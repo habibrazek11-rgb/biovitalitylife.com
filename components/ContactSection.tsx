@@ -29,7 +29,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section className="py-24 px-6" aria-labelledby="contact-heading" id="contact">
+    <section className="py-28 px-6 bg-[#fafaf8]" aria-labelledby="contact-heading" id="contact">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <motion.div
@@ -40,7 +40,7 @@ export default function ContactSection() {
           transition={{ duration: 0.7 }}
         >
           <p className="section-label mb-3" style={{ color: '#ca3b80' }}>Get in Touch</p>
-          <h2 id="contact-heading" className="section-title mb-4">
+          <h2 id="contact-heading" className="font-heading text-4xl md:text-5xl font-bold text-[var(--color-dark)] mb-4">
             We&apos;d Love to Hear From You
           </h2>
           <p className="text-[var(--color-muted)] text-lg max-w-xl mx-auto">

@@ -1,11 +1,11 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { clerkMiddleware, createRouteMatcher, clerkClient } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 const isProtectedRoute = createRouteMatcher(['/account(.*)', '/checkout(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth()
+  const { userId } = await auth()
 
   // Protect admin routes — must be signed in (role check done in layout)
   if (isAdminRoute(req)) {
@@ -18,6 +18,22 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     if (!userId) {
       return NextResponse.redirect(new URL('/sign-in', req.url))
+    }
+  }
+
+  // Redirect admin users to /admin only right after sign-in
+  if (userId && req.nextUrl.pathname === '/') {
+    const referer = req.headers.get('referer') || ''
+    const isComingFromSignIn = referer.includes('/sign-in')
+
+    if (isComingFromSignIn) {
+      const client = await clerkClient()
+      const user = await client.users.getUser(userId)
+      const role = (user.publicMetadata as { role?: string })?.role
+
+      if (role === 'admin') {
+        return NextResponse.redirect(new URL('/admin', req.url))
+      }
     }
   }
 })

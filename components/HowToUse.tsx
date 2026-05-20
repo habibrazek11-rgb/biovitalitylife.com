@@ -19,28 +19,35 @@ const healthUses = [
   'Ideal for 14–30 day detox routines',
 ]
 
-/**
- * HowToUse — two-panel section: Food Line (culinary) + Pharma Line (wellness).
- */
+const listItemVariants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.4, delay: i * 0.08 },
+  }),
+}
+
 export default function HowToUse() {
   return (
-    <section className="py-24 px-6" aria-labelledby="howtouse-heading">
+    <section className="py-28 px-6 bg-white" aria-labelledby="howtouse-heading">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
-          className="mb-16 text-center max-w-3xl mx-auto"
+          className="mb-20 text-center max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <p className="section-label mb-3" style={{ color: '#ca3b80' }}>Usage Guide</p>
-          <h2 id="howtouse-heading" className="section-title mb-5">
+          <p className="mb-3 text-xs font-bold tracking-[0.3em] uppercase" style={{ color: '#ca3b80' }}>
+            Usage Guide
+          </p>
+          <h2 id="howtouse-heading" className="font-heading text-4xl md:text-5xl font-bold text-[var(--color-dark)] mb-5">
             How to Use BioVitality™ ?
           </h2>
           <p className="text-[var(--color-muted)] text-lg leading-relaxed">
-            BioVitality™ can be incorporated easily into your daily lifestyle — whether you cook
-            Mediterranean dishes or follow a wellness routine for detox and gut health. Here are
+            Whether you cook Mediterranean dishes or follow a wellness routine — here are
             the best ways to use our organic prickly pear vinegar every day.
           </p>
         </motion.div>
@@ -49,20 +56,21 @@ export default function HowToUse() {
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Food Line panel */}
           <motion.div
-            className="rounded-2xl border border-gray-100 overflow-hidden"
-            initial={{ opacity: 0, x: -30 }}
+            className="group rounded-2xl border border-gray-100 overflow-hidden bg-white hover:shadow-xl transition-shadow duration-500"
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
+            viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            {/* Panel header */}
-            <div className="flex items-center gap-3 px-7 py-5 border-b border-gray-100 bg-[#084e46]/[0.03]">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-full"
+            <div className="flex items-center gap-3 px-7 py-5 border-b border-gray-100 bg-gradient-to-r from-[#084e46]/[0.04] to-transparent">
+              <motion.div
+                className="flex h-11 w-11 items-center justify-center rounded-full"
                 style={{ backgroundColor: '#084e46' }}
+                whileHover={{ rotate: 10, scale: 1.1 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
                 <UtensilsCrossed size={18} className="text-white" />
-              </div>
+              </motion.div>
               <div>
                 <h3 className="font-heading text-lg font-bold text-[var(--color-dark)]">
                   In Your Mediterranean Kitchen
@@ -73,15 +81,22 @@ export default function HowToUse() {
               </div>
             </div>
 
-            {/* Description + bullets */}
             <div className="px-7 py-6">
               <p className="mb-5 text-sm text-[var(--color-muted)] leading-relaxed">
                 Enhance the flavor of your everyday dishes with a fruity, balanced vinegar
                 inspired by Mediterranean tradition.
               </p>
               <ul className="space-y-3" role="list">
-                {culinaryUses.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5">
+                {culinaryUses.map((item, i) => (
+                  <motion.li
+                    key={item}
+                    className="flex items-start gap-2.5"
+                    custom={i}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={listItemVariants}
+                  >
                     <ChevronRight
                       size={16}
                       className="mt-0.5 shrink-0"
@@ -89,7 +104,7 @@ export default function HowToUse() {
                       aria-hidden="true"
                     />
                     <span className="text-sm text-[var(--color-dark)] leading-relaxed">{item}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
@@ -97,20 +112,21 @@ export default function HowToUse() {
 
           {/* Pharma Line panel */}
           <motion.div
-            className="rounded-2xl border border-gray-100 overflow-hidden"
-            initial={{ opacity: 0, x: 30 }}
+            className="group rounded-2xl border border-gray-100 overflow-hidden bg-white hover:shadow-xl transition-shadow duration-500"
+            initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
+            viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
           >
-            {/* Panel header */}
-            <div className="flex items-center gap-3 px-7 py-5 border-b border-gray-100 bg-[#ca3b80]/[0.03]">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-full"
+            <div className="flex items-center gap-3 px-7 py-5 border-b border-gray-100 bg-gradient-to-r from-[#ca3b80]/[0.04] to-transparent">
+              <motion.div
+                className="flex h-11 w-11 items-center justify-center rounded-full"
                 style={{ backgroundColor: '#ca3b80' }}
+                whileHover={{ rotate: -10, scale: 1.1 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
                 <Heart size={18} className="text-white" />
-              </div>
+              </motion.div>
               <div>
                 <h3 className="font-heading text-lg font-bold text-[var(--color-dark)]">
                   As a Daily Wellness Ritual
@@ -121,15 +137,22 @@ export default function HowToUse() {
               </div>
             </div>
 
-            {/* Description + bullets */}
             <div className="px-7 py-6">
               <p className="mb-5 text-sm text-[var(--color-muted)] leading-relaxed">
                 BioVitality™ Pharma Line is crafted for detox, digestion, and gut health,
                 making it ideal for simple wellness routines.
               </p>
               <ul className="space-y-3" role="list">
-                {healthUses.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5">
+                {healthUses.map((item, i) => (
+                  <motion.li
+                    key={item}
+                    className="flex items-start gap-2.5"
+                    custom={i}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={listItemVariants}
+                  >
                     <ChevronRight
                       size={16}
                       className="mt-0.5 shrink-0"
@@ -137,7 +160,7 @@ export default function HowToUse() {
                       aria-hidden="true"
                     />
                     <span className="text-sm text-[var(--color-dark)] leading-relaxed">{item}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>

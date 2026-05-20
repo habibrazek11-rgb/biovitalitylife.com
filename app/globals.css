@@ -26,12 +26,18 @@
 }
 
 /* ─── Base Styles ─────────────────────────────────────────────────────────── */
+/* ─── Smooth scroll behavior ──────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  /* offset for sticky topbar + navbar — updated dynamically by TopBar.tsx */
   --topbar-height: 0px;
   scroll-padding-top: calc(var(--topbar-height) + 80px);
   overflow-x: hidden;
+}
+
+/* ─── Selection color ─────────────────────────────────────────────────────── */
+::selection {
+  background-color: rgba(8, 78, 70, 0.15);
+  color: #084e46;
 }
 
 body {
@@ -181,4 +187,20 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-marquee {
   animation: marquee 25s linear infinite;
+}
+
+/* ─── Smooth transitions for all interactive elements ─────────────────────── */
+a, button {
+  transition: all 0.2s ease;
+}
+
+/* ─── Image hover zoom ────────────────────────────────────────────────────── */
+.hover-zoom {
+  overflow: hidden;
+}
+.hover-zoom img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.hover-zoom:hover img {
+  transform: scale(1.05);
 }

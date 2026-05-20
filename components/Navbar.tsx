@@ -9,7 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { useUser } from '@clerk/nextjs'
 import { useSyncUser } from '@/lib/useSyncUser'
-import { useAdminRedirect } from '@/lib/useAdminRedirect'
 
 const navLinks = [
   { href: '/', label: 'HOME' },
@@ -30,7 +29,6 @@ export default function Navbar() {
   const totalItems = useCartStore((s) => s.totalItems())
   const { isSignedIn, user } = useUser()
   useSyncUser()
-  useAdminRedirect()
 
   // Check if user is admin from Clerk publicMetadata OR email
   const metadataRole = (user?.publicMetadata as { role?: string })?.role

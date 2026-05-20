@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 import { Tag, FlaskConical, CheckCircle, Globe, MessageCircle, Palette, Factory, Truck } from 'lucide-react'
 
 const solutions = [
@@ -36,8 +37,16 @@ const steps = [
 ]
 
 export default function PrivateLabel() {
+  const sectionRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+  const imageScale = useTransform(scrollYProgress, [0, 0.5], [0.9, 1])
+  const imageRotate = useTransform(scrollYProgress, [0, 1], [-2, 2])
+
   return (
-    <section className="py-24 px-6 overflow-hidden" aria-labelledby="private-label-heading">
+    <section ref={sectionRef} className="py-24 px-6 overflow-hidden" aria-labelledby="private-label-heading">
       <div className="mx-auto max-w-6xl">
         {/* Top section — text + image */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
@@ -81,7 +90,7 @@ export default function PrivateLabel() {
             </div>
           </motion.div>
 
-          {/* Right — image */}
+          {/* Right — image with scroll animation */}
           <motion.div
             className="relative"
             initial={{ opacity: 0, x: 30 }}
@@ -89,7 +98,10 @@ export default function PrivateLabel() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, delay: 0.15 }}
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <motion.div
+              className="relative rounded-2xl overflow-hidden shadow-2xl"
+              style={{ scale: imageScale, rotate: imageRotate }}
+            >
               <Image
                 src="/private-label-vinegar.png"
                 alt="BioVitality Private Label — Your Brand, Our Expertise"
@@ -97,7 +109,7 @@ export default function PrivateLabel() {
                 height={600}
                 className="w-full h-auto object-contain"
               />
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 

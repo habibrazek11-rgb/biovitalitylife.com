@@ -24,67 +24,83 @@ const steps = [
   },
 ]
 
-/**
- * SimpleRitual — ultra-minimal 3-step section.
- */
 export default function SimpleRitual() {
   return (
-    <section className="py-24 px-6" aria-labelledby="ritual-heading">
+    <section className="py-28 px-6 bg-white" aria-labelledby="ritual-heading">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
-          <p className="section-label mb-3" style={{ color: '#ca3b80' }}>How to Use</p>
-          <h2 id="ritual-heading" className="section-title">
+          <p className="mb-3 text-xs font-bold tracking-[0.3em] uppercase" style={{ color: '#ca3b80' }}>
+            How to Use
+          </p>
+          <h2 id="ritual-heading" className="font-heading text-4xl md:text-5xl font-bold text-[var(--color-dark)]">
             Simple Daily Ritual
           </h2>
         </motion.div>
 
-        {/* Steps */}
-        <div className="grid gap-8 md:grid-cols-3">
-          {steps.map((step, i) => (
+        {/* Steps with connecting line */}
+        <div className="relative">
+          {/* Connecting line (desktop) */}
+          <div className="hidden md:block absolute top-24 left-[16.67%] right-[16.67%] h-[1px]" aria-hidden="true">
             <motion.div
-              key={step.number}
-              className="group text-center"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="h-full bg-gradient-to-r from-transparent via-[#084e46]/20 to-transparent"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-            >
-              {/* Image */}
-              <div className="relative mx-auto mb-6 h-48 w-48 overflow-hidden rounded-full
-                              border-2 border-gray-100 group-hover:border-[#084e46]/30
-                              transition-all duration-500">
-                <Image
-                  src={step.image}
-                  alt={step.title}
-                  fill
-                  sizes="192px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
+              transition={{ duration: 1, delay: 0.5 }}
+            />
+          </div>
 
-              {/* Number */}
-              <p className="text-xs font-bold tracking-widest text-[var(--color-muted)] mb-2">
-                STEP {step.number}
-              </p>
+          <div className="grid gap-12 md:grid-cols-3">
+            {steps.map((step, i) => (
+              <motion.div
+                key={step.number}
+                className="group text-center"
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.2 }}
+              >
+                {/* Image */}
+                <motion.div
+                  className="relative mx-auto mb-8 h-48 w-48"
+                  whileHover={{ y: -8 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                >
+                  <div className="absolute inset-0 rounded-full bg-[#084e46]/5 scale-110 group-hover:scale-125 transition-transform duration-500" />
+                  <div className="relative h-full w-full overflow-hidden rounded-full shadow-lg ring-4 ring-white">
+                    <Image
+                      src={step.image}
+                      alt={step.title}
+                      fill
+                      sizes="192px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+                  {/* Step number */}
+                  <div className="absolute -top-2 -right-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#084e46] text-white text-sm font-bold shadow-lg">
+                    {step.number}
+                  </div>
+                </motion.div>
 
-              {/* Title */}
-              <h3 className="font-heading text-xl font-bold text-[var(--color-dark)] mb-2">
-                {step.title}
-              </h3>
+                {/* Title */}
+                <h3 className="font-heading text-xl font-bold text-[var(--color-dark)] mb-2 group-hover:text-[#084e46] transition-colors">
+                  {step.title}
+                </h3>
 
-              {/* Description */}
-              <p className="text-sm text-[var(--color-muted)] leading-relaxed max-w-[200px] mx-auto">
-                {step.description}
-              </p>
-            </motion.div>
-          ))}
+                {/* Description */}
+                <p className="text-sm text-[var(--color-muted)] leading-relaxed max-w-[200px] mx-auto">
+                  {step.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

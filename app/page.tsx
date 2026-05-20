@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import TopBar from '@/components/TopBar'
 import Navbar from '@/components/Navbar'
+import ScrollProgress from '@/components/ScrollProgress'
 import HeroSection from '@/components/HeroSection'
+import FeaturedProducts from '@/components/FeaturedProducts'
 import WhyBioVitality from '@/components/WhyBioVitality'
 import SimpleRitual from '@/components/SimpleRitual'
 import OrganicCertification from '@/components/OrganicCertification'
@@ -26,10 +28,12 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <ToastProvider>
+      <ScrollProgress />
       <TopBar />
       <Navbar />
       <main id="main-content">
         <HeroSection />
+        <FeaturedProducts />
         <WhyBioVitality />
         <OrganicCertification />
         <SimpleRitual />

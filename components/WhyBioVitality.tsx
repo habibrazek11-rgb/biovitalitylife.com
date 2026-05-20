@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { motion, type Variants } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 const features = [
   {
@@ -30,71 +31,109 @@ const features = [
   },
 ]
 
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-}
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-}
-
-/**
- * WhyBioVitality — enhanced section with real images and editorial layout.
- */
 export default function WhyBioVitality() {
+  const sectionRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '10%'])
+
   return (
-    <section className="py-24 px-6 bg-white" aria-labelledby="why-heading">
-      <div className="mx-auto max-w-6xl">
+    <section
+      ref={sectionRef}
+      className="relative py-28 px-6 bg-[#fafaf8] overflow-hidden"
+      aria-labelledby="why-heading"
+    >
+      {/* Subtle background pattern */}
+      <motion.div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{ y: bgY }}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, #084e46 1px, transparent 0)',
+          backgroundSize: '40px 40px',
+        }} />
+      </motion.div>
+
+      <div className="relative mx-auto max-w-6xl">
         {/* Header */}
-        <motion.div
-          className="mb-16 text-center max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.7 }}
-        >
-          <p className="section-label mb-3" style={{ color: '#ca3b80' }}>The BioVitality Difference</p>
-          <h2 id="why-heading" className="section-title mb-6">
+        <div className="mb-20 text-center max-w-3xl mx-auto">
+          <motion.p
+            className="mb-3 text-xs font-bold tracking-[0.3em] uppercase"
+            style={{ color: '#ca3b80' }}
+            initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            The BioVitality Difference
+          </motion.p>
+
+          <motion.h2
+            id="why-heading"
+            className="font-heading text-4xl md:text-5xl font-bold text-[var(--color-dark)] mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
             Why Organic Prickly Pear Vinegar?
-          </h2>
-          <p className="text-[var(--color-muted)] text-lg leading-relaxed">
-            Born from the ancient cactus fields of Tunisia, our vinegar is crafted through
-            traditional slow fermentation — preserving every enzyme, every probiotic, every
-            drop of Mediterranean goodness. The result is a living vinegar with the Mother,
-            unlike anything you&apos;ve tasted before.
-          </p>
-        </motion.div>
+          </motion.h2>
+
+          <motion.p
+            className="text-[var(--color-muted)] text-lg leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            Born from the ancient cactus fields of Tunisia, our vinegar is crafted through traditional
+            slow fermentation — preserving every enzyme, every probiotic, every drop of Mediterranean goodness.
+          </motion.p>
+        </div>
 
         {/* Feature grid */}
-        <motion.div
-          className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
-          {features.map((f) => (
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((f, i) => (
             <motion.div
               key={f.title}
-              variants={cardVariants}
               className="group flex flex-col items-center text-center"
+              initial={{ opacity: 0, y: 60, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.7,
+                delay: i * 0.12,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
             >
               {/* Circle image */}
-              <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-white shadow-lg mb-5
-                              transition-transform duration-500 group-hover:scale-105">
-                <Image
-                  src={f.image}
-                  alt={f.title}
-                  fill
-                  sizes="160px"
-                  className="object-cover"
-                />
-              </div>
+              <motion.div
+                className="relative mb-8"
+                whileHover={{ scale: 1.05, rotate: 2 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              >
+                {/* Glow ring */}
+                <div className="absolute inset-[-6px] rounded-full bg-gradient-to-br from-[#084e46]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                <div className="relative h-44 w-44 overflow-hidden rounded-full shadow-lg ring-4 ring-white">
+                  <Image
+                    src={f.image}
+                    alt={f.title}
+                    fill
+                    sizes="176px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                {/* Number badge */}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-[#084e46] text-white text-xs font-bold shadow-md">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+              </motion.div>
 
               {/* Text */}
-              <h3 className="mb-2 font-heading text-lg font-bold text-[var(--color-dark)]">
+              <h3 className="mb-2 font-heading text-lg font-bold text-[var(--color-dark)] group-hover:text-[#084e46] transition-colors duration-300">
                 {f.title}
               </h3>
               <p className="text-sm text-[var(--color-muted)] leading-relaxed max-w-[220px]">
@@ -102,7 +141,7 @@ export default function WhyBioVitality() {
               </p>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

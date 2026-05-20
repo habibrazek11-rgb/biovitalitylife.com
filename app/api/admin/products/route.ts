@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
   const {
     name, line, price, currency, shortDescription, description,
     badge, images, benefits, howToUse, certifications, categoryId, inStock,
+    seoTitle, seoDescription,
   } = body
 
   const slug = name
@@ -46,8 +47,8 @@ export async function POST(req: NextRequest) {
       benefits: benefits || [],
       howToUse: howToUse || [],
       certifications: certifications || [],
-      categoryId: categoryId || null,
       inStock: inStock ?? true,
+      ...(categoryId ? { category: { connect: { id: categoryId } } } : {}),
     },
   })
 

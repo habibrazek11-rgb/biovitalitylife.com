@@ -9,7 +9,6 @@ import {
   X,
   Eye,
   Globe,
-  Search,
   GripVertical,
 } from 'lucide-react'
 import { UploadDropzone } from '@/lib/uploadthing-components'
@@ -44,10 +43,36 @@ interface ProductFormProps {
   isEditing?: boolean
 }
 
+/**
+ * Parse the description field — it may contain JSON with structured data
+ * or plain text for older products.
+ */
+function parseDescription(desc: string | null) {
+  if (!desc) return { text: '', itemForm: '', volume: '', weight: '', numberOfItems: '1', unitCount: '', countryOfOrigin: 'Tunisia' }
+  try {
+    const parsed = JSON.parse(desc)
+    return {
+      text: parsed.text || '',
+      itemForm: parsed.itemForm || '',
+      volume: parsed.volume || '',
+      weight: parsed.weight || '',
+      numberOfItems: parsed.numberOfItems || '1',
+      unitCount: parsed.unitCount || '',
+      countryOfOrigin: parsed.countryOfOrigin || 'Tunisia',
+    }
+  } catch {
+    // Plain text description (legacy)
+    return { text: desc, itemForm: '', volume: '', weight: '', numberOfItems: '1', unitCount: '', countryOfOrigin: 'Tunisia' }
+  }
+}
+
 export default function ProductForm({ product, isEditing = false }: ProductFormProps) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
+
+  // Parse existing description
+  const existingDetails = parseDescription(product?.description || null)
 
   // Form state
   const [name, setName] = useState(product?.name || '')
@@ -55,7 +80,7 @@ export default function ProductForm({ product, isEditing = false }: ProductFormP
   const [price, setPrice] = useState(product?.price?.toString() || '')
   const [currency, setCurrency] = useState(product?.currency || 'AED')
   const [shortDescription, setShortDescription] = useState(product?.shortDescription || '')
-  const [description, setDescription] = useState(product?.description || '')
+  const [descriptionText, setDescriptionText] = useState(existingDetails.text)
   const [badge, setBadge] = useState(product?.badge || '')
   const [images, setImages] = useState<string[]>(product?.images || [])
   const [benefits, setBenefits] = useState(product?.benefits?.join('\n') || '')
@@ -65,6 +90,14 @@ export default function ProductForm({ product, isEditing = false }: ProductFormP
   const [inStock, setInStock] = useState(product?.inStock ?? true)
   const [seoTitle, setSeoTitle] = useState(product?.seoTitle || '')
   const [seoDescription, setSeoDescription] = useState(product?.seoDescription || '')
+
+  // Item details (stored as JSON in description)
+  const [itemForm, setItemForm] = useState(existingDetails.itemForm)
+  const [volume, setVolume] = useState(existingDetails.volume)
+  const [weight, setWeight] = useState(existingDetails.weight)
+  const [numberOfItems, setNumberOfItems] = useState(existingDetails.numberOfItems)
+  const [unitCount, setUnitCount] = useState(existingDetails.unitCount)
+  const [countryOfOrigin, setCountryOfOrigin] = useState(existingDetails.countryOfOrigin)
 
   // Derived slug preview
   const slug = name
@@ -83,13 +116,24 @@ export default function ProductForm({ product, isEditing = false }: ProductFormP
     e.preventDefault()
     setSaving(true)
 
+    // Pack description as JSON with structured data
+    const descriptionJson = JSON.stringify({
+      text: descriptionText,
+      itemForm,
+      volume,
+      weight,
+      numberOfItems,
+      unitCount,
+      countryOfOrigin,
+    })
+
     const payload = {
       name,
       line,
       price,
       currency,
       shortDescription: shortDescription || null,
-      description: description || null,
+      description: descriptionJson,
       badge: badge || null,
       images,
       benefits: benefits.split('\n').filter(Boolean),
@@ -176,368 +220,357 @@ export default function ProductForm({ product, isEditing = false }: ProductFormP
 
       {/* Main content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left column — main content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Title & Description card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <div className="space-y-5">
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Title
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder="Short sleeve t-shirt"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Short description
-                  </label>
-                  <input
-                    type="text"
-                    value={shortDescription}
-                    onChange={(e) => setShortDescription(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder="Brief product summary for listings..."
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Description
-                  </label>
-                  <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows={6}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder="Full product description..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Media card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-bold text-gray-900">Media</h2>
-              {images.length > 0 && (
-                <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {images.map((url, idx) => (
-                    <div
-                      key={url}
-                      className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 border border-gray-200"
-                    >
-                      <Image src={url} alt="" fill className="object-cover" sizes="150px" />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(url)}
-                        className="absolute top-2 right-2 rounded-full bg-white/90 p-1 text-gray-600 opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-600 transition-all shadow-sm"
-                      >
-                        <X size={14} />
-                      </button>
-                      {idx === 0 && (
-                        <span className="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-bold text-white">
-                          Main
-                        </span>
-                      )}
-                      <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab">
-                        <GripVertical size={14} className="text-white drop-shadow" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {images.length < 5 && (
-                <UploadDropzone
-                  endpoint="productImage"
-                  config={{ mode: 'auto' }}
-                  onClientUploadComplete={(res) => {
-                    if (res) {
-                      const newUrls = res.map((f) => f.url)
-                      setImages([...images, ...newUrls].slice(0, 5))
-                    }
-                  }}
-                  onUploadError={(err) => alert(err.message)}
+        {/* Left column — main content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Title & Description card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <div className="space-y-5">
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Title</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="BioVitality™ Pharma Line – 250ml"
                 />
-              )}
-              <p className="mt-2 text-xs text-gray-400">
-                {images.length}/5 images · First image is the main product image
-              </p>
-            </div>
-
-            {/* Product details card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-bold text-gray-900">Product details</h2>
-              <div className="space-y-5">
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Benefits <span className="font-normal text-gray-400">(one per line)</span>
-                  </label>
-                  <textarea
-                    value={benefits}
-                    onChange={(e) => setBenefits(e.target.value)}
-                    rows={4}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder={"Supports gut health\nNatural detox\nRich in antioxidants"}
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    How to use <span className="font-normal text-gray-400">(one per line)</span>
-                  </label>
-                  <textarea
-                    value={howToUse}
-                    onChange={(e) => setHowToUse(e.target.value)}
-                    rows={3}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder={"1 tbsp in warm water\nMix with honey or lemon"}
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Certifications <span className="font-normal text-gray-400">(one per line)</span>
-                  </label>
-                  <textarea
-                    value={certifications}
-                    onChange={(e) => setCertifications(e.target.value)}
-                    rows={2}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder={"EcoCert Organic\nNo Pesticides"}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* SEO card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Globe size={16} className="text-gray-500" />
-                  <h2 className="text-sm font-bold text-gray-900">
-                    Search engine listing
-                  </h2>
-                </div>
-                <Link
-                  href={`/shop/${slug}`}
-                  target="_blank"
-                  className="flex items-center gap-1 text-xs text-[#084e46] hover:underline"
-                >
-                  <Eye size={12} />
-                  Preview
-                </Link>
               </div>
 
-              {/* Google preview */}
-              <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white border border-gray-200">
-                    <Globe size={14} className="text-[#084e46]" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-600">biovitalitylife.com</p>
-                    <p className="text-[11px] text-gray-400">{previewUrl}</p>
-                  </div>
-                </div>
-                <h3 className="text-lg font-normal text-[#1a0dab] leading-snug mb-1 line-clamp-1">
-                  {previewTitle}
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-                  {previewDescription}
-                </p>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Short description</label>
+                <input
+                  type="text"
+                  value={shortDescription}
+                  onChange={(e) => setShortDescription(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="Brief product summary for listings..."
+                />
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-1.5 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-700">Page title</span>
-                    <span className={`text-xs ${(seoTitle || name).length > 60 ? 'text-red-500' : 'text-gray-400'}`}>
-                      {(seoTitle || name).length}/70
-                    </span>
-                  </label>
-                  <input
-                    type="text"
-                    value={seoTitle}
-                    onChange={(e) => setSeoTitle(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder={name || 'Page title for search engines'}
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-700">Meta description</span>
-                    <span className={`text-xs ${(seoDescription || shortDescription).length > 155 ? 'text-red-500' : 'text-gray-400'}`}>
-                      {(seoDescription || shortDescription).length}/160
-                    </span>
-                  </label>
-                  <textarea
-                    value={seoDescription}
-                    onChange={(e) => setSeoDescription(e.target.value)}
-                    rows={3}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder={shortDescription || 'Description for search engine results...'}
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    URL handle
-                  </label>
-                  <div className="flex items-center rounded-lg border border-gray-300 overflow-hidden focus-within:border-[#084e46] focus-within:ring-1 focus-within:ring-[#084e46]">
-                    <span className="bg-gray-50 px-3 py-2.5 text-sm text-gray-500 border-r border-gray-300">
-                      /shop/
-                    </span>
-                    <input
-                      type="text"
-                      value={slug}
-                      readOnly
-                      className="flex-1 px-3 py-2.5 text-sm outline-none bg-gray-50 text-gray-600"
-                    />
-                  </div>
-                  <p className="mt-1 text-xs text-gray-400">
-                    Auto-generated from the product title
-                  </p>
-                </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Full description</label>
+                <textarea
+                  value={descriptionText}
+                  onChange={(e) => setDescriptionText(e.target.value)}
+                  rows={4}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="Detailed product description..."
+                />
               </div>
             </div>
           </div>
 
-          {/* Right column — sidebar */}
-          <div className="space-y-6">
-            {/* Status card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-bold text-gray-900">Status</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Availability</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={inStock}
-                      onChange={(e) => setInStock(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#084e46]" />
-                  </label>
-                </div>
-                <p className="text-xs text-gray-500">
-                  {inStock ? 'Product is visible and available for purchase' : 'Product is hidden from the store'}
-                </p>
-              </div>
-            </div>
-
-            {/* Organization card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-bold text-gray-900">Organization</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Product line
-                  </label>
-                  <select
-                    value={line}
-                    onChange={(e) => setLine(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                  >
-                    <option value="pharma">Pharma</option>
-                    <option value="food">Food</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Category
-                  </label>
-                  <select
-                    value={categoryId}
-                    onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                  >
-                    <option value="">No category</option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Badge
-                  </label>
-                  <input
-                    type="text"
-                    value={badge}
-                    onChange={(e) => setBadge(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                    placeholder="Best Seller, New, etc."
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Pricing card */}
-            <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-bold text-gray-900">Pricing</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Price
-                  </label>
-                  <div className="flex items-center rounded-lg border border-gray-300 overflow-hidden focus-within:border-[#084e46] focus-within:ring-1 focus-within:ring-[#084e46]">
-                    <span className="bg-gray-50 px-3 py-2.5 text-sm text-gray-500 border-r border-gray-300">
-                      {currency}
-                    </span>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                      required
-                      className="flex-1 px-3 py-2.5 text-sm outline-none"
-                      placeholder="0.00"
-                    />
+          {/* Media card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <h2 className="mb-4 text-sm font-bold text-gray-900">Media</h2>
+            {images.length > 0 && (
+              <div className="mb-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {images.map((url, idx) => (
+                  <div key={url} className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                    <Image src={url} alt="" fill className="object-cover" sizes="150px" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(url)}
+                      className="absolute top-2 right-2 rounded-full bg-white/90 p-1 text-gray-600 opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-600 transition-all shadow-sm"
+                    >
+                      <X size={14} />
+                    </button>
+                    {idx === 0 && (
+                      <span className="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-bold text-white">Main</span>
+                    )}
+                    <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab">
+                      <GripVertical size={14} className="text-white drop-shadow" />
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            )}
+            {images.length < 20 && (
+              <UploadDropzone
+                endpoint="productImage"
+                config={{ mode: 'auto' }}
+                onClientUploadComplete={(res) => {
+                  if (res) {
+                    const newUrls = res.map((f) => f.url)
+                    setImages([...images, ...newUrls])
+                  }
+                }}
+                onUploadError={(err) => alert(err.message)}
+              />
+            )}
+            <p className="mt-2 text-xs text-gray-400">{images.length} images · First image is the main product image</p>
+          </div>
 
-                <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                    Currency
-                  </label>
-                  <select
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none
-                               focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
-                  >
-                    <option value="AED">AED</option>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                  </select>
+          {/* Measurements & Highlights card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <h2 className="mb-4 text-sm font-bold text-gray-900">Measurements & Highlights</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Item form</label>
+                <input
+                  type="text"
+                  value={itemForm}
+                  onChange={(e) => setItemForm(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="Liquid"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Volume</label>
+                <input
+                  type="text"
+                  value={volume}
+                  onChange={(e) => setVolume(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="250 Milliliters"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Weight</label>
+                <input
+                  type="text"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="0.44 Kilograms"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Number of items</label>
+                <input
+                  type="text"
+                  value={numberOfItems}
+                  onChange={(e) => setNumberOfItems(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="1"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Unit count</label>
+                <input
+                  type="text"
+                  value={unitCount}
+                  onChange={(e) => setUnitCount(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="250 Milliliters"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Country of origin</label>
+                <input
+                  type="text"
+                  value={countryOfOrigin}
+                  onChange={(e) => setCountryOfOrigin(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="Tunisia"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* About this item (benefits) */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <h2 className="mb-4 text-sm font-bold text-gray-900">About this item</h2>
+            <div className="space-y-5">
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                  Key features <span className="font-normal text-gray-400">(one per line — shown as bullet points)</span>
+                </label>
+                <textarea
+                  value={benefits}
+                  onChange={(e) => setBenefits(e.target.value)}
+                  rows={5}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder={"ORGANIC & CERTIFIED – EcoCert certified organic prickly pear vinegar\nRAW & UNFILTERED – Naturally fermented using a traditional process\nVERSATILE EVERYDAY USE – Enjoy as a refreshing diluted drink"}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                  How to use <span className="font-normal text-gray-400">(one per line)</span>
+                </label>
+                <textarea
+                  value={howToUse}
+                  onChange={(e) => setHowToUse(e.target.value)}
+                  rows={3}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder={"1 tbsp in warm water\nMix with honey or lemon"}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                  Certifications <span className="font-normal text-gray-400">(one per line)</span>
+                </label>
+                <textarea
+                  value={certifications}
+                  onChange={(e) => setCertifications(e.target.value)}
+                  rows={2}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-y focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder={"EcoCert Organic\nNo Pesticides"}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SEO card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Globe size={16} className="text-gray-500" />
+                <h2 className="text-sm font-bold text-gray-900">Search engine listing</h2>
+              </div>
+              <Link href={`/shop/${slug}`} target="_blank" className="flex items-center gap-1 text-xs text-[#084e46] hover:underline">
+                <Eye size={12} />
+                Preview
+              </Link>
+            </div>
+
+            {/* Google preview */}
+            <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white border border-gray-200">
+                  <Globe size={14} className="text-[#084e46]" />
                 </div>
+                <div>
+                  <p className="text-xs text-gray-600">biovitalitylife.com</p>
+                  <p className="text-[11px] text-gray-400">{previewUrl}</p>
+                </div>
+              </div>
+              <h3 className="text-lg font-normal text-[#1a0dab] leading-snug mb-1 line-clamp-1">{previewTitle}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{previewDescription}</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="mb-1.5 flex items-center justify-between">
+                  <span className="text-sm font-semibold text-gray-700">Page title</span>
+                  <span className={`text-xs ${(seoTitle || name).length > 60 ? 'text-red-500' : 'text-gray-400'}`}>
+                    {(seoTitle || name).length}/70
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  value={seoTitle}
+                  onChange={(e) => setSeoTitle(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder={name || 'Page title for search engines'}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 flex items-center justify-between">
+                  <span className="text-sm font-semibold text-gray-700">Meta description</span>
+                  <span className={`text-xs ${(seoDescription || shortDescription).length > 155 ? 'text-red-500' : 'text-gray-400'}`}>
+                    {(seoDescription || shortDescription).length}/160
+                  </span>
+                </label>
+                <textarea
+                  value={seoDescription}
+                  onChange={(e) => setSeoDescription(e.target.value)}
+                  rows={3}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder={shortDescription || 'Description for search engine results...'}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">URL handle</label>
+                <div className="flex items-center rounded-lg border border-gray-300 overflow-hidden focus-within:border-[#084e46] focus-within:ring-1 focus-within:ring-[#084e46]">
+                  <span className="bg-gray-50 px-3 py-2.5 text-sm text-gray-500 border-r border-gray-300">/shop/</span>
+                  <input type="text" value={slug} readOnly className="flex-1 px-3 py-2.5 text-sm outline-none bg-gray-50 text-gray-600" />
+                </div>
+                <p className="mt-1 text-xs text-gray-400">Auto-generated from the product title</p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Right column — sidebar */}
+        <div className="space-y-6">
+          {/* Status card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <h2 className="mb-4 text-sm font-bold text-gray-900">Status</h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Availability</span>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked={inStock} onChange={(e) => setInStock(e.target.checked)} className="sr-only peer" />
+                  <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#084e46]" />
+                </label>
+              </div>
+              <p className="text-xs text-gray-500">
+                {inStock ? 'Product is visible and available for purchase' : 'Product is hidden from the store'}
+              </p>
+            </div>
+          </div>
+
+          {/* Organization card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <h2 className="mb-4 text-sm font-bold text-gray-900">Organization</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Product line</label>
+                <select value={line} onChange={(e) => setLine(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors">
+                  <option value="pharma">Pharma (Wellness)</option>
+                  <option value="food">Food (Culinary)</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Category</label>
+                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors">
+                  <option value="">No category</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Badge</label>
+                <input
+                  type="text"
+                  value={badge}
+                  onChange={(e) => setBadge(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors"
+                  placeholder="Best Seller, New, etc."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Pricing card */}
+          <div className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm">
+            <h2 className="mb-4 text-sm font-bold text-gray-900">Pricing</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Price</label>
+                <div className="flex items-center rounded-lg border border-gray-300 overflow-hidden focus-within:border-[#084e46] focus-within:ring-1 focus-within:ring-[#084e46]">
+                  <span className="bg-gray-50 px-3 py-2.5 text-sm text-gray-500 border-r border-gray-300">{currency}</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                    className="flex-1 px-3 py-2.5 text-sm outline-none"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Currency</label>
+                <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#084e46] focus:ring-1 focus:ring-[#084e46] transition-colors">
+                  <option value="AED">AED</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </form>
   )
 }

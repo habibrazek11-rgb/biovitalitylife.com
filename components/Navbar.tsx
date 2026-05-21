@@ -25,10 +25,13 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const totalItems = useCartStore((s) => s.totalItems())
   const { isSignedIn, user } = useUser()
   useSyncUser()
+
+  useEffect(() => { setMounted(true) }, [])
 
   // Check if user is admin from Clerk publicMetadata OR email
   const metadataRole = (user?.publicMetadata as { role?: string })?.role
@@ -178,11 +181,11 @@ export default function Navbar() {
               href="/cart"
               className={`relative p-2 rounded-full transition-all duration-200
                 ${textColor} ${hoverColor} hover:bg-white/10`}
-              aria-label={`Cart, ${totalItems} item${totalItems !== 1 ? 's' : ''}`}
+              aria-label={`Cart, ${mounted ? totalItems : 0} item${(!mounted || totalItems !== 1) ? 's' : ''}`}
             >
               <ShoppingCart size={21} strokeWidth={1.8} />
               <AnimatePresence>
-                {totalItems > 0 && (
+                {mounted && totalItems > 0 && (
                   <motion.span
                     key="badge"
                     initial={{ scale: 0, opacity: 0 }}

@@ -24,13 +24,10 @@ export default function AboutContent() {
     <>
       {/* Hero */}
       <section
-        className="relative flex min-h-[50vh] items-end pb-16 pt-16 px-6"
-        style={{
-          background: 'linear-gradient(135deg, #1a3a1b 0%, #2D6A2F 60%, #7a3a1a 100%)',
-        }}
+        className="relative flex min-h-[30vh] items-end pb-16 pt-32 px-6 bg-white"
         aria-label="About hero"
       >
-        <div className="mx-auto max-w-4xl text-white">
+        <div className="mx-auto max-w-4xl text-[var(--color-dark)]">
           <motion.p
             className="section-label mb-3"
             style={{ color: 'var(--color-gold)' }}

@@ -46,7 +46,7 @@ export default function TopBar() {
                  text-white text-[11px]
                  transition-all duration-500 ease-in-out"
       style={{
-        backgroundColor: 'var(--color-primary)',
+        backgroundColor: '#084e46',
         top: 0,
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(-100%)',

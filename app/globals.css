@@ -2,7 +2,7 @@
 
 /* ─── Brand Design Tokens ─────────────────────────────────────────────────── */
 :root {
-  --color-primary: #2D6A2F;
+  --color-primary: #084e46;
   --color-accent:  #E8823A;
   --color-gold:    #C9A84C;
   --color-cream:   #FAF6EE;
@@ -203,4 +203,13 @@ a, button {
 }
 .hover-zoom:hover img {
   transform: scale(1.05);
+}
+
+/* ─── Hide scrollbar for horizontal scroll ────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

@@ -4,14 +4,12 @@ import Navbar from '@/components/Navbar'
 import ScrollProgress from '@/components/ScrollProgress'
 import HeroSection from '@/components/HeroSection'
 import ProductLines from '@/components/ProductLines'
-import FeaturedProducts from '@/components/FeaturedProducts'
-import WhyBioVitality from '@/components/WhyBioVitality'
+import Separator from '@/components/Separator'
 import SimpleRitual from '@/components/SimpleRitual'
+import WhyBioVitality from '@/components/WhyBioVitality'
 import OrganicCertification from '@/components/OrganicCertification'
-import HowToUse from '@/components/HowToUse'
+import PrivateLabelBanner from '@/components/PrivateLabelBanner'
 import BlogSection from '@/components/BlogSection'
-import PrivateLabel from '@/components/PrivateLabel'
-import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
 import ToastProvider from '@/components/ui/ToastProvider'
 import ScrollReveal from '@/components/ScrollReveal'
@@ -37,30 +35,16 @@ export default function HomePage() {
       <main id="main-content">
         <HeroSection />
         <ProductLines />
-        <ScrollReveal offset={50}>
-          <FeaturedProducts />
-        </ScrollReveal>
-        <ScrollReveal offset={40} scale>
-          <WhyBioVitality />
-        </ScrollReveal>
+        <Separator />
+        <SimpleRitual />
         <ScrollReveal offset={30}>
           <OrganicCertification />
         </ScrollReveal>
-        <ScrollReveal offset={40} scale>
-          <SimpleRitual />
-        </ScrollReveal>
         <ScrollReveal offset={30}>
-          <HowToUse />
+          <WhyBioVitality />
         </ScrollReveal>
-        <ScrollReveal offset={40}>
-          <BlogSection />
-        </ScrollReveal>
-        <ScrollReveal offset={50} scale>
-          <PrivateLabel />
-        </ScrollReveal>
-        <ScrollReveal offset={30}>
-          <ContactSection />
-        </ScrollReveal>
+        <PrivateLabelBanner />
+        <BlogSection />
       </main>
       <Footer />
     </ToastProvider>

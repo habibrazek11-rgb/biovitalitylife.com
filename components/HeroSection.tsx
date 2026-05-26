@@ -4,248 +4,186 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useCallback } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const slides = [
   {
-    web: '/hero-section/web/biovitality-organic-prickly-pear-vinegar-chef-pouring-landscape.jpg',
-    mobile: '/hero-section/mobile/biovitality-organic-prickly-pear-vinegar-chef-pouring-portrait-mobile.jpg',
-    alt: 'Chef pouring BioVitality organic prickly pear vinegar',
+    web: '/Hero%20Section/BioVitality%20%20Pure%20Organic%20Prickly%20Pear%20Vinegar.jpg',
+    mobile: '/Hero%20Section/BioVitality%20Welness%20Line%20Mobile.jpg',
   },
   {
-    web: '/hero-section/web/biovitality-organic-prickly-pear-vinegar-wellness-lifestyle.jpg',
-    mobile: '/hero-section/mobile/biovitality-organic-prickly-pear-vinegar-lightness-purity-portrait-mobile.jpg',
-    alt: 'BioVitality organic prickly pear vinegar wellness lifestyle',
-  },
-  {
-    web: '/hero-section/web/biovitality-organic-prickly-pear-vinegar-with-mother-salad-dressing.jpg',
-    mobile: '/hero-section/mobile/biovitality-organic-prickly-pear-vinegar-with-mother-rustic-kitchen-mobile.jpg',
-    alt: 'BioVitality organic prickly pear vinegar with mother for salad dressing',
+    web: '/Hero%20Section/BioVitality%20%20Pure%20Organic%20Prickly%20Pear%20Vinegar%20Pharma.jpg',
+    mobile: '/Hero%20Section/BioVitality%20Gourmet%20Line%20Mobile.jpg',
   },
 ]
 
-const AUTOPLAY_MS = 6000
+const AUTOPLAY_MS = 5000
 
 export default function HeroSection() {
   const [current, setCurrent] = useState(0)
-  const [direction, setDirection] = useState(1)
 
   const next = useCallback(() => {
-    setDirection(1)
     setCurrent((prev) => (prev + 1) % slides.length)
   }, [])
 
-  const prev = useCallback(() => {
-    setDirection(-1)
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length)
-  }, [])
-
-  const goTo = useCallback((index: number) => {
-    setDirection(index > current ? 1 : -1)
-    setCurrent(index)
-  }, [current])
-
-  // Autoplay
   useEffect(() => {
     const timer = setInterval(next, AUTOPLAY_MS)
     return () => clearInterval(timer)
   }, [next])
 
-  const slideVariants = {
-    enter: (dir: number) => ({
-      opacity: 0,
-      filter: 'blur(8px)',
-      scale: 1.1,
-    }),
-    center: {
-      opacity: 1,
-      filter: 'blur(0px)',
-      scale: 1,
-      transition: { duration: 1.5, ease: [0.4, 0, 0.2, 1] as const },
-    },
-    exit: (dir: number) => ({
-      opacity: 0,
-      filter: 'blur(4px)',
-      scale: 1.05,
-      transition: { duration: 1, ease: [0.4, 0, 0.2, 1] as const },
-    }),
-  }
-
   return (
-    <section
-      className="relative flex min-h-screen items-center justify-center overflow-hidden"
-      aria-label="Hero"
-      aria-roledescription="carousel"
-    >
-      {/* Background carousel */}
-      <div className="absolute inset-0">
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+    <section className="relative overflow-hidden min-h-screen" aria-label="Hero">
+      {/* Background carousel — desktop */}
+      <div className="absolute inset-0 hidden md:block">
+        <AnimatePresence mode="popLayout">
           <motion.div
-            key={current}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
+            key={`web-${current}`}
             className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2 }}
           >
-            {/* Desktop image */}
             <Image
               src={slides[current].web}
-              alt={slides[current].alt}
+              alt=""
               fill
               sizes="100vw"
-              className="object-cover hidden md:block"
+              className="object-cover"
               priority={current === 0}
-            />
-            {/* Mobile image */}
-            <Image
-              src={slides[current].mobile}
-              alt={slides[current].alt}
-              fill
-              sizes="100vw"
-              className="object-cover md:hidden"
-              priority={current === 0}
+              aria-hidden="true"
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Gradient overlay */}
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50"
-        aria-hidden="true"
-      />
+      {/* Background carousel — mobile */}
+      <div className="absolute inset-0 md:hidden">
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={`mobile-${current}`}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2 }}
+          >
+            <Image
+              src={slides[current].mobile}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority={current === 0}
+              aria-hidden="true"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-      {/* Side gradient for text readability */}
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent"
-        aria-hidden="true"
-      />
+      {/* Text content */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 flex items-center min-h-screen">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          className="flex flex-col py-24 md:py-28 max-w-2xl text-center md:text-left items-center md:items-start mx-auto md:mx-0"
+        >
+          <p className="mb-3 text-xs font-bold tracking-[0.25em] uppercase text-[#6b7280]">
+            Pure · Organic · Wellness
+          </p>
 
-      {/* Navigation arrows */}
-      <button
-        onClick={prev}
-        className="absolute left-5 md:left-10 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full
-                   bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center
-                   text-white hover:bg-white/20 transition-all duration-300
-                   focus:outline-none focus:ring-2 focus:ring-white/40
-                   opacity-0 hover:opacity-100 md:opacity-60 md:hover:opacity-100"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-5 md:right-10 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full
-                   bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center
-                   text-white hover:bg-white/20 transition-all duration-300
-                   focus:outline-none focus:ring-2 focus:ring-white/40
-                   opacity-0 hover:opacity-100 md:opacity-60 md:hover:opacity-100"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
+          <h1 className="font-heading text-5xl md:text-6xl leading-[1.1] mb-6">
+            <span className="text-[#084e46] font-normal">Pure Organic</span><br />
+            <span className="text-[var(--color-dark)] font-bold">Prickly Pear</span><br />
+            <span className="text-[var(--color-dark)] font-bold">Vinegar</span>
+          </h1>
+
+          <p className="text-base text-[var(--color-muted)] leading-relaxed mb-8 max-w-md">
+            Crafted from handpicked prickly pears, our vinegar supports digestion, boosts energy, and elevates your daily wellness — naturally.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-10">
+            <Link href="/shop" className="btn-primary">
+              Shop Now →
+            </Link>
+            <Link href="/about" className="btn-outline">
+              Learn Benefits
+            </Link>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Dot indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => goTo(i)}
-            className="relative h-2.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-white/40"
-            style={{ width: i === current ? 32 : 10 }}
-            aria-label={`Go to slide ${i + 1}`}
-            aria-current={i === current ? 'true' : undefined}
+            onClick={() => setCurrent(i)}
+            className="relative h-2.5 rounded-full transition-all duration-500 focus:outline-none"
+            style={{ width: i === current ? 28 : 10 }}
+            aria-label={`Slide ${i + 1}`}
           >
-            <span
-              className={`absolute inset-0 rounded-full transition-all duration-500 ${
-                i === current ? 'bg-white' : 'bg-white/40'
-              }`}
-            />
-            {/* Progress bar animation on active dot */}
-            {i === current && (
-              <motion.span
-                className="absolute inset-0 rounded-full bg-white/70 origin-left"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: AUTOPLAY_MS / 1000, ease: 'linear' }}
-                key={`progress-${current}`}
-              />
-            )}
+            <span className={`absolute inset-0 rounded-full transition-all duration-500 ${i === current ? 'bg-[#084e46]' : 'bg-[#084e46]/30'}`} />
           </button>
         ))}
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-6 text-xs font-bold tracking-[0.3em] uppercase text-white/80"
-        >
-          From Tunisia · For the World
-        </motion.p>
-
-        {/* Title */}
-        <motion.h1
-          className="mb-6 font-heading text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          Pure Organic Prickly Pear Vinegar
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="mb-10 text-lg text-white/70 md:text-xl max-w-xl mx-auto"
-        >
-          From the heart of Tunisia · For Food, Detox &amp; Gut Health
-        </motion.p>
-
-        {/* CTAs */}
+      {/* Trust badges — desktop only */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-10 w-full max-w-6xl px-6 hidden md:block">
         <motion.div
-          className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
+          className="rounded-2xl bg-white/90 backdrop-blur-md shadow-[0_8px_40px_rgba(0,0,0,0.08)] border border-white/50 px-10 py-8"
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link href="/shop?line=pharma" className="btn-primary min-w-[220px]">
-              Discover the Pharma Line
-            </Link>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link href="/shop?line=food" className="btn-outline-light min-w-[220px]">
-              Explore Food Line
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="mt-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-        >
-          <motion.div
-            className="mx-auto w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5"
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-          >
-            <motion.div
-              className="w-1.5 h-1.5 rounded-full bg-white"
-              animate={{ y: [0, 16, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </motion.div>
+          <div className="grid grid-cols-4 gap-8">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#084e46]/10">
+                <svg className="w-5 h-5 text-[#084e46]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[var(--color-dark)]">100% Organic</p>
+                <p className="text-[11px] text-[var(--color-muted)] leading-snug mt-0.5">No chemicals, no preservatives.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#084e46]/10">
+                <svg className="w-5 h-5 text-[#084e46]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[var(--color-dark)]">Raw & Unfiltered</p>
+                <p className="text-[11px] text-[var(--color-muted)] leading-snug mt-0.5">Rich in nutrients and enzymes.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#084e46]/10">
+                <svg className="w-5 h-5 text-[#084e46]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-1.59.659H9.06a2.25 2.25 0 01-1.591-.659L5 14.5m14 0V17a2.25 2.25 0 01-2.25 2.25H7.25A2.25 2.25 0 015 17v-2.5" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[var(--color-dark)]">With The Mother</p>
+                <p className="text-[11px] text-[var(--color-muted)] leading-snug mt-0.5">Naturally fermented for maximum benefits.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#084e46]/10">
+                <svg className="w-5 h-5 text-[#084e46]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[var(--color-dark)]">Daily Wellness</p>
+                <p className="text-[11px] text-[var(--color-muted)] leading-snug mt-0.5">Supports digestion, energy & immunity.</p>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

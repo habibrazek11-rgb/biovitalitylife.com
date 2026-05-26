@@ -6,51 +6,72 @@ import { motion } from 'framer-motion'
 
 const lines = [
   {
-    image: '/gourmet-line/biovitality-organic-prickly-pear-vinegar-lightness-purity-gourmet-line-250ml.jpeg',
-    title: 'Lightness & Purity Line',
+    image: '/Gourmet Line/Welness LINE BIOVITALITY.jpg',
+    title: 'Everyday Wellness',
+    description: 'Perfect for your daily health ritual.',
     href: '/shop/biovitality-organic-prickly-pear-vinegar-250ml-raw-unfiltered-wellness-vinegar',
   },
   {
-    image: '/gourmet-line/biovitality-organic-prickly-pear-vinegar-with-mother-gourmet-line-250ml.jpeg',
-    title: 'With the Mother Line',
+    image: '/Gourmet Line/Gourmet LINE BIOVITALITY.jpg',
+    title: 'Premium Selection',
+    description: 'Elevate your meals with gourmet flavor.',
     href: '/shop/biovitality-organic-prickly-pear-vinegar-250ml-food-line-raw-unfiltered-wellness-vinegar',
   },
 ]
 
 export default function ProductLines() {
   return (
-    <section className="py-10 px-6 bg-white" aria-label="Product lines">
+    <section className="py-16 px-6 bg-white" aria-label="Product lines">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="mb-2 text-xs font-bold tracking-[0.3em] uppercase text-[var(--color-muted)]">
+            Explore Our Collection
+          </p>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-[var(--color-dark)]">
+            Gourmet Line
+          </h2>
+        </motion.div>
+
+        {/* Two cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {lines.map((line, i) => (
             <motion.div
               key={line.title}
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '100px' }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
             >
-              <Link href={line.href} className="block">
-                <div className="relative w-full aspect-[16/9] mb-4">
-                  <Image
-                    src={line.image}
-                    alt={line.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover rounded-lg"
-                    priority
-                  />
+              <Link href={line.href} className="group block relative rounded-2xl overflow-hidden h-[280px] md:h-[320px]">
+                {/* Background image */}
+                <Image
+                  src={line.image}
+                  alt={line.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* Content overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+                <div className="absolute inset-0 flex flex-col justify-center p-8 md:p-10">
+                  <h3 className="font-heading text-3xl md:text-4xl font-bold text-white leading-tight mb-2 italic">
+                    {line.title}
+                  </h3>
+                  <p className="text-sm text-white/80 mb-5 max-w-[200px]">
+                    {line.description}
+                  </p>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#084e46] px-5 py-2.5 text-sm font-semibold text-white w-fit group-hover:bg-[#063b35] transition-colors">
+                    Shop Now →
+                  </span>
                 </div>
-              </Link>
-              <h3 className="text-base font-medium text-[var(--color-dark)] mb-3">
-                {line.title}
-              </h3>
-              <Link
-                href={line.href}
-                className="inline-block rounded-sm bg-[#084e46] px-5 py-2 text-sm font-medium text-white hover:bg-[#063b35] transition-colors"
-              >
-                Shop now
               </Link>
             </motion.div>
           ))}

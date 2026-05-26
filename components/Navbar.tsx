@@ -52,10 +52,9 @@ export default function Navbar() {
     return () => { document.body.style.overflow = '' }
   }, [drawerOpen])
 
-  // Hero has dark background — white text on homepage when not scrolled
-  const onHeroTop = isHeroPage && !scrolled
-  const textColor = onHeroTop ? 'text-white' : 'text-[var(--color-dark)]'
-  const hoverColor = 'hover:text-[var(--color-accent)]'
+  // Always use dark green text for nav links
+  const textColor = 'text-[#084e46]'
+  const hoverColor = 'hover:text-[#063b35]'
 
   return (
     <>
@@ -63,14 +62,12 @@ export default function Navbar() {
         className={`fixed left-0 right-0 z-50 transition-all duration-500
           ${scrolled
             ? 'bg-white shadow-[0_2px_20px_rgba(0,0,0,0.07)] border-b border-gray-100'
-            : isHeroPage
-              ? 'bg-transparent border-b border-transparent'
-              : 'bg-white border-b border-gray-100/60'
+            : 'bg-transparent border-b border-transparent'
           }`}
         style={{ top: scrolled ? '0px' : 'var(--topbar-height, 0px)' }}
       >
         <nav
-          className="mx-auto flex max-w-7xl items-center px-6 py-6 lg:py-8 relative"
+          className="mx-auto flex max-w-7xl items-center px-6 py-5 lg:py-6 relative"
           aria-label="Main navigation"
         >
           {/* ── Mobile: Hamburger (left) ── */}
@@ -85,7 +82,7 @@ export default function Navbar() {
           </button>
 
           {/* ── Desktop links (left) ── */}
-          <ul className="hidden md:flex items-center gap-1" role="list">
+          <ul className="hidden md:flex items-center gap-0.5" role="list">
             {navLinks.map(({ href, label }) => {
               const isActive =
                 href === '/' ? pathname === '/' : pathname.startsWith(href)
@@ -93,17 +90,15 @@ export default function Navbar() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className={`relative px-4 py-2 text-[11px] font-bold tracking-[0.15em]
+                    className={`relative px-4 py-2 text-[12px] font-semibold tracking-[0.05em]
                       transition-colors duration-200 rounded-md
-                      ${textColor} ${hoverColor}
-                      ${isActive ? 'text-[var(--color-accent)]' : ''}`}
+                      ${isActive ? 'text-[#084e46]' : 'text-[#084e46]/70 hover:text-[#084e46]'}`}
                   >
                     {label}
                     {isActive && (
                       <motion.span
                         layoutId="nav-underline"
-                        className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full"
-                        style={{ backgroundColor: 'var(--color-accent)' }}
+                        className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-[#084e46]"
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -116,16 +111,16 @@ export default function Navbar() {
           {/* ── Centered Logo ── */}
           <Link
             href="/"
-            className="absolute left-1/2 -translate-x-1/2 flex items-center mt-2 md:mt-3"
+            className="absolute left-1/2 -translate-x-1/2 flex items-center"
             aria-label="BioVitality home"
           >
             <Image
               src="/BioVitality-logo-1.png"
               alt="BioVitality™ logo"
-              width={180}
-              height={56}
+              width={200}
+              height={64}
               className={`w-auto object-contain transition-all duration-500
-                ${scrolled ? 'h-10' : 'h-16 md:h-20'}`}
+                ${scrolled ? 'h-11' : 'h-16 md:h-20'}`}
             />
           </Link>
 

@@ -3,6 +3,7 @@ import Script from 'next/script'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
 const inter = Inter({
@@ -96,6 +97,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ClerkProvider>
           {children}
+          <WhatsAppButton />
         </ClerkProvider>
       </body>
     </html>

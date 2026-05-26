@@ -76,6 +76,7 @@ export default function HeroSection() {
               priority={current === 0}
               aria-hidden="true"
             />
+            {/* Dark overlay for text readability on mobile */}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -86,28 +87,29 @@ export default function HeroSection() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="flex flex-col py-24 md:py-28 max-w-2xl text-center md:text-left items-center md:items-start mx-auto md:mx-0"
+          className="flex flex-col justify-end pb-16 md:pb-0 md:justify-center py-0 md:py-28 max-w-2xl text-center md:text-left items-center md:items-start mx-auto md:mx-0 w-full min-h-screen"
         >
-          <p className="mb-3 text-xs font-bold tracking-[0.25em] uppercase text-[#6b7280]">
+          {/* Desktop text — hidden on mobile */}
+          <p className="mb-3 text-xs font-bold tracking-[0.25em] uppercase text-[#6b7280] hidden md:block">
             Pure · Organic · Wellness
           </p>
 
-          <h1 className="font-heading text-5xl md:text-6xl leading-[1.1] mb-6">
+          <h1 className="font-heading text-4xl md:text-6xl leading-[1.1] mb-6 hidden md:block">
             <span className="text-[#084e46] font-normal">Pure Organic</span><br />
             <span className="text-[var(--color-dark)] font-bold">Prickly Pear</span><br />
             <span className="text-[var(--color-dark)] font-bold">Vinegar</span>
           </h1>
 
-          <p className="text-base text-[var(--color-muted)] leading-relaxed mb-8 max-w-md">
+          <p className="text-base text-[var(--color-muted)] leading-relaxed mb-8 max-w-md hidden md:block">
             Crafted from handpicked prickly pears, our vinegar supports digestion, boosts energy, and elevates your daily wellness — naturally.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-10">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-3 md:gap-4 mb-10 mt-auto md:mt-0">
             <Link href="/shop" className="btn-primary">
               Shop Now →
             </Link>
-            <Link href="/about" className="btn-outline">
+            <Link href="/about" className="hidden md:inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-md border-2 border-[#084e46] text-[#084e46] hover:bg-[#084e46] hover:text-white transition-all duration-200 min-w-[180px]">
               Learn Benefits
             </Link>
           </div>

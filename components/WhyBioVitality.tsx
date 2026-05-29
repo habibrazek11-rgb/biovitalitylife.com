@@ -33,7 +33,7 @@ const features = [
 
 export default function WhyBioVitality() {
   return (
-    <section className="py-20 px-6" aria-labelledby="why-heading">
+    <section className="py-12 px-6" aria-labelledby="why-heading">
       <div className="mx-auto max-w-6xl rounded-2xl bg-[#f5f3ee] px-8 py-14 md:px-12">
         {/* Header */}
         <motion.div

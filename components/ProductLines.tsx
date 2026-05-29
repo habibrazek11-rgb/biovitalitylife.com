@@ -21,7 +21,7 @@ const lines = [
 
 export default function ProductLines() {
   return (
-    <section className="py-16 px-6 bg-white" aria-label="Product lines">
+    <section className="py-10 px-6 bg-white" aria-label="Product lines">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div

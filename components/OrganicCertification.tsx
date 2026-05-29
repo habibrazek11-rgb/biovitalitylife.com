@@ -14,11 +14,11 @@ const certPoints = [
 
 export default function OrganicCertification() {
   return (
-    <section className="py-16 px-6 bg-white" aria-labelledby="cert-heading">
+    <section className="py-8 px-6 bg-white" aria-labelledby="cert-heading">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
-          className="text-center mb-10"
+          className="text-center mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

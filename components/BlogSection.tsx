@@ -30,7 +30,7 @@ const posts = [
 
 export default function BlogSection() {
   return (
-    <section className="py-16 px-6 bg-white" aria-labelledby="blog-heading">
+    <section className="py-12 px-4 bg-white" aria-labelledby="blog-heading">
       <div className="mx-auto max-w-8xl">
         {/* Header */}
         <motion.div

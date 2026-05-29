@@ -26,7 +26,7 @@ const steps = [
 
 export default function SimpleRitual() {
   return (
-    <section className="py-20 px-6 bg-white" aria-labelledby="ritual-heading">
+    <section className="py-12 px-6 bg-white" aria-labelledby="ritual-heading">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <motion.div

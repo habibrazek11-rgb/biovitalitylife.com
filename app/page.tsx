@@ -10,6 +10,7 @@ import SimpleRitual from '@/components/SimpleRitual'
 import WhyBioVitality from '@/components/WhyBioVitality'
 import OrganicCertification from '@/components/OrganicCertification'
 import PrivateLabelBanner from '@/components/PrivateLabelBanner'
+import FAQ from '@/components/FAQ'
 import BlogSection from '@/components/BlogSection'
 import Footer from '@/components/Footer'
 import ToastProvider from '@/components/ui/ToastProvider'
@@ -39,13 +40,12 @@ export default function HomePage() {
         <ProductLines />
         <Separator />
         <SimpleRitual />
-        <ScrollReveal offset={30}>
-          <OrganicCertification />
-        </ScrollReveal>
+        <OrganicCertification />
         <ScrollReveal offset={30}>
           <WhyBioVitality />
         </ScrollReveal>
         <PrivateLabelBanner />
+        <FAQ />
         <BlogSection />
       </main>
       <Footer />

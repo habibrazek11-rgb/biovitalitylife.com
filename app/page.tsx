@@ -3,7 +3,6 @@ import TopBar from '@/components/TopBar'
 import Navbar from '@/components/Navbar'
 import ScrollProgress from '@/components/ScrollProgress'
 import HeroSection from '@/components/HeroSection'
-import TrustBadges from '@/components/TrustBadges'
 import ProductLines from '@/components/ProductLines'
 import Separator from '@/components/Separator'
 import SimpleRitual from '@/components/SimpleRitual'
@@ -36,7 +35,6 @@ export default function HomePage() {
       <Navbar />
       <main id="main-content">
         <HeroSection />
-        <TrustBadges />
         <ProductLines />
         <Separator />
         <SimpleRitual />

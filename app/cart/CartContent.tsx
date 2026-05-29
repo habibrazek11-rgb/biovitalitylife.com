@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Shield, Truck, RotateCcw } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
 
@@ -17,6 +17,7 @@ export default function CartContent() {
   const subtotal = totalPrice()
   const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST
   const total = subtotal + shipping
+  const progressPct = Math.min((subtotal / SHIPPING_THRESHOLD) * 100, 100)
 
   const handleRemove = (id: string, name: string) => {
     removeItem(id)
@@ -24,16 +25,24 @@ export default function CartContent() {
   }
 
   return (
-    <section className="min-h-screen pt-10 pb-20 px-6 bg-white" aria-label="Shopping cart">
-      <div className="mx-auto max-w-6xl">
-        <motion.h1
-          className="font-heading text-4xl font-bold text-[var(--color-dark)] mb-10"
-          initial={{ opacity: 0, y: 20 }}
+    <section className="min-h-screen pt-28 pb-20 px-4 md:px-6 bg-white" aria-label="Shopping cart">
+      <div className="mx-auto max-w-5xl">
+        {/* Header */}
+        <motion.div
+          className="mb-8 flex items-center justify-between"
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          Your Cart
-        </motion.h1>
+          <h1 className="text-3xl font-bold text-[var(--color-dark)]">
+            Your Cart
+          </h1>
+          {items.length > 0 && (
+            <span className="text-sm text-[var(--color-muted)]">
+              {items.reduce((a, i) => a + i.quantity, 0)} item{items.reduce((a, i) => a + i.quantity, 0) !== 1 ? 's' : ''}
+            </span>
+          )}
+        </motion.div>
 
         {items.length === 0 ? (
           <motion.div
@@ -42,15 +51,13 @@ export default function CartContent() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <ShoppingBag
-              size={64}
-              className="mb-6 text-gray-200"
-              aria-hidden="true"
-            />
-            <h2 className="mb-3 font-heading text-2xl font-bold text-[var(--color-dark)]">
+            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-50">
+              <ShoppingBag size={36} className="text-gray-300" />
+            </div>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--color-dark)]">
               Your cart is empty
             </h2>
-            <p className="mb-8 text-[var(--color-muted)]">
+            <p className="mb-8 text-sm text-[var(--color-muted)]">
               Discover our premium organic prickly pear vinegar.
             </p>
             <Link href="/shop" className="btn-primary">
@@ -58,154 +65,142 @@ export default function CartContent() {
             </Link>
           </motion.div>
         ) : (
-          <div className="grid gap-10 lg:grid-cols-3">
-            {/* Line items */}
-            <div className="lg:col-span-2">
-              <ul className="space-y-4" role="list" aria-label="Cart items">
-                <AnimatePresence initial={false}>
-                  {items.map((item) => (
-                    <motion.li
-                      key={item.id}
-                      layout
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="flex gap-5 rounded-2xl border border-gray-100 bg-[var(--color-cream)] p-5"
-                    >
-                      {/* Product image */}
-                      <div className="h-24 w-24 shrink-0 rounded-xl overflow-hidden relative bg-[var(--color-cream)]">
-                        {item.image ? (
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fill
-                            sizes="96px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div
-                            className="h-full w-full"
-                            style={{
-                              background:
-                                item.line === 'pharma'
-                                  ? 'linear-gradient(135deg, #2D6A2F, #C9A84C)'
-                                  : 'linear-gradient(135deg, #E8823A, #2D6A2F)',
-                            }}
-                            role="img"
-                            aria-label={`${item.name} product image`}
-                          />
-                        )}
+          <div className="grid gap-6 lg:grid-cols-5">
+            {/* Cart items */}
+            <div className="lg:col-span-3 space-y-3">
+              <AnimatePresence initial={false}>
+                {items.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm"
+                  >
+                    {/* Image */}
+                    <div className="relative h-20 w-20 shrink-0 rounded-xl overflow-hidden bg-[#f8f7f4]">
+                      {item.image ? (
+                        <Image src={item.image} alt={item.name} fill sizes="80px" className="object-contain p-1" />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-[#084e46] to-[#C9A84C]" />
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex flex-1 flex-col justify-between min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <span className="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold text-white capitalize mb-1" style={{ backgroundColor: '#084e46' }}>
+                            {item.line} Line
+                          </span>
+                          <h3 className="text-sm font-semibold text-[var(--color-dark)] leading-snug line-clamp-2">
+                            {item.name}
+                          </h3>
+                        </div>
+                        <button
+                          onClick={() => handleRemove(item.id, item.name)}
+                          className="shrink-0 p-1.5 text-gray-300 hover:text-red-400 transition-colors"
+                          aria-label="Remove item"
+                        >
+                          <Trash2 size={15} />
+                        </button>
                       </div>
 
-                      <div className="flex flex-1 flex-col justify-between min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <span
-                              className="mb-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-bold text-white capitalize"
-                              style={{ backgroundColor: 'var(--color-primary)' }}
-                            >
-                              {item.line} Line
-                            </span>
-                            <h3 className="font-heading text-base font-bold text-[var(--color-dark)] leading-snug line-clamp-2">
-                              {item.name}
-                            </h3>
-                          </div>
+                      <div className="flex items-center justify-between mt-2">
+                        {/* Quantity */}
+                        <div className="flex items-center rounded-lg border border-gray-200 overflow-hidden">
                           <button
-                            onClick={() => handleRemove(item.id, item.name)}
-                            className="shrink-0 p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
-                            aria-label={`Remove ${item.name} from cart`}
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="flex h-7 w-7 items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors"
                           >
-                            <Trash2 size={16} />
+                            <Minus size={12} />
+                          </button>
+                          <span className="flex h-7 w-8 items-center justify-center text-xs font-bold border-x border-gray-200">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="flex h-7 w-7 items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors"
+                          >
+                            <Plus size={12} />
                           </button>
                         </div>
-
-                        <div className="flex items-center justify-between mt-3">
-                          {/* Quantity stepper */}
-                          <div className="flex items-center rounded-lg border border-gray-200 bg-white overflow-hidden">
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="flex h-8 w-8 items-center justify-center text-[var(--color-muted)]
-                                         hover:bg-gray-50 transition-colors"
-                              aria-label="Decrease quantity"
-                            >
-                              <Minus size={14} />
-                            </button>
-                            <span
-                              className="flex h-8 w-10 items-center justify-center text-sm font-bold
-                                         border-x border-gray-200 text-[var(--color-dark)]"
-                              aria-live="polite"
-                            >
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="flex h-8 w-8 items-center justify-center text-[var(--color-muted)]
-                                         hover:bg-gray-50 transition-colors"
-                              aria-label="Increase quantity"
-                            >
-                              <Plus size={14} />
-                            </button>
-                          </div>
-
-                          <span className="font-heading text-lg font-bold text-[var(--color-dark)]">
-                            AED {item.price * item.quantity}
-                          </span>
-                        </div>
+                        <span className="text-base font-bold text-[var(--color-dark)]">
+                          AED {item.price * item.quantity}
+                        </span>
                       </div>
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </ul>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {/* Trust badges */}
+              <div className="grid grid-cols-3 gap-3 pt-2">
+                {[
+                  { icon: Truck, text: 'Free over AED 200' },
+                  { icon: Shield, text: 'Secure checkout' },
+                  { icon: RotateCcw, text: 'Easy returns' },
+                ].map((b) => (
+                  <div key={b.text} className="flex flex-col items-center gap-1.5 rounded-xl border border-gray-100 p-3 text-center">
+                    <b.icon size={16} className="text-[#084e46]" />
+                    <span className="text-[10px] text-[var(--color-muted)] leading-tight">{b.text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Order summary */}
-            <aside
-              className="h-fit rounded-2xl border border-gray-100 bg-[var(--color-cream)] p-6"
-              aria-label="Order summary"
-            >
-              <h2 className="mb-6 font-heading text-xl font-bold text-[var(--color-dark)]">
-                Order Summary
-              </h2>
+            <aside className="lg:col-span-2 h-fit rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h2 className="mb-5 text-base font-bold text-[var(--color-dark)]">Order Summary</h2>
 
-              <dl className="space-y-3 mb-6">
+              {/* Free shipping progress */}
+              {shipping > 0 && (
+                <div className="mb-5 rounded-xl bg-[#f9f6f1] p-3">
+                  <p className="text-xs text-[var(--color-muted)] mb-2">
+                    Add <strong className="text-[#084e46]">AED {SHIPPING_THRESHOLD - subtotal}</strong> more for free shipping
+                  </p>
+                  <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full bg-[#084e46]"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progressPct}%` }}
+                      transition={{ duration: 0.6 }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <dl className="space-y-3 mb-5">
                 <div className="flex justify-between text-sm">
                   <dt className="text-[var(--color-muted)]">Subtotal</dt>
-                  <dd className="font-semibold text-[var(--color-dark)]">AED {subtotal}</dd>
+                  <dd className="font-semibold">AED {subtotal}</dd>
                 </div>
                 <div className="flex justify-between text-sm">
                   <dt className="text-[var(--color-muted)]">Shipping</dt>
-                  <dd className={`font-semibold ${shipping === 0 ? 'text-[var(--color-primary)]' : 'text-[var(--color-dark)]'}`}>
+                  <dd className={`font-semibold ${shipping === 0 ? 'text-[#084e46]' : ''}`}>
                     {shipping === 0 ? 'FREE' : `AED ${shipping}`}
                   </dd>
                 </div>
-                {shipping > 0 && (
-                  <p className="text-xs text-[var(--color-muted)]">
-                    Add AED {SHIPPING_THRESHOLD - subtotal} more for free shipping
-                  </p>
-                )}
-                <div className="border-t border-gray-200 pt-3 flex justify-between">
+                <div className="border-t border-gray-100 pt-3 flex justify-between">
                   <dt className="font-bold text-[var(--color-dark)]">Total</dt>
-                  <dd className="font-heading text-xl font-bold text-[var(--color-dark)]">
-                    AED {total}
-                  </dd>
+                  <dd className="text-xl font-bold text-[var(--color-dark)]">AED {total}</dd>
                 </div>
               </dl>
 
               <Link
                 href="/checkout"
-                className="flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base
-                           font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
-                style={{ backgroundColor: 'var(--color-accent)' }}
+                className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] mb-3"
+                style={{ backgroundColor: '#084e46' }}
               >
                 Proceed to Checkout
-                <ArrowRight size={18} aria-hidden="true" />
+                <ArrowRight size={16} />
               </Link>
 
               <Link
                 href="/shop"
-                className="mt-4 flex w-full items-center justify-center text-sm font-semibold
-                           text-[var(--color-muted)] hover:text-[var(--color-primary)] transition-colors"
+                className="flex w-full items-center justify-center text-xs font-medium text-[var(--color-muted)] hover:text-[#084e46] transition-colors"
               >
                 Continue Shopping
               </Link>

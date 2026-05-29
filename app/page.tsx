@@ -5,15 +5,16 @@ import ScrollProgress from '@/components/ScrollProgress'
 import HeroSection from '@/components/HeroSection'
 import ProductLines from '@/components/ProductLines'
 import Separator from '@/components/Separator'
+import WellnessBanner from '@/components/WellnessBanner'
 import SimpleRitual from '@/components/SimpleRitual'
-import WhyBioVitality from '@/components/WhyBioVitality'
+import KitchenCarousel from '@/components/KitchenCarousel'
 import OrganicCertification from '@/components/OrganicCertification'
 import PrivateLabelBanner from '@/components/PrivateLabelBanner'
 import FAQ from '@/components/FAQ'
 import BlogSection from '@/components/BlogSection'
+import Newsletter from '@/components/Newsletter'
 import Footer from '@/components/Footer'
 import ToastProvider from '@/components/ui/ToastProvider'
-import ScrollReveal from '@/components/ScrollReveal'
 
 export const metadata: Metadata = {
   title: 'BioVitality™ – Pure Organic Prickly Pear Vinegar',
@@ -37,13 +38,13 @@ export default function HomePage() {
         <HeroSection />
         <ProductLines />
         <Separator />
+        <WellnessBanner />
         <SimpleRitual />
+        <KitchenCarousel />
         <OrganicCertification />
-        <ScrollReveal offset={30}>
-          <WhyBioVitality />
-        </ScrollReveal>
         <PrivateLabelBanner />
         <FAQ />
+        <Newsletter />
         <BlogSection />
       </main>
       <Footer />

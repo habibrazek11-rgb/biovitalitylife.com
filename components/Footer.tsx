@@ -115,8 +115,6 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold text-xs md:text-sm mb-2 md:mb-4">Our Services</h4>
             <ul className="space-y-1.5 md:space-y-2.5" role="list">
-              <li><span className="text-white/60 text-xs md:text-sm">Pharma Line (Wellness)</span></li>
-              <li><span className="text-white/60 text-xs md:text-sm">Food Line (Culinary)</span></li>
               <li><span className="text-white/60 text-xs md:text-sm">Private Label Solutions</span></li>
               <li><span className="text-white/60 text-xs md:text-sm">Bulk & Wholesale</span></li>
             </ul>

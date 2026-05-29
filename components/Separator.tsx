@@ -1,21 +1,28 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 export default function Separator() {
   return (
-    <div className="py-12 px-6 bg-[#084e46]">
-      <motion.div
-        className="mx-auto max-w-4xl flex items-center justify-center"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-sm font-bold tracking-[0.25em] uppercase text-white">
+    <>
+      {/* Desktop: image separator */}
+      <div className="hidden md:block w-full">
+        <Image
+          src="/seeparator/Whole%20Body%20Wellness%20Support.jpg"
+          alt="Whole Body Wellness Support"
+          width={1920}
+          height={400}
+          sizes="100vw"
+          className="w-full h-auto"
+        />
+      </div>
+
+      {/* Mobile: green band */}
+      <div className="md:hidden py-8 px-6 bg-[#084e46]">
+        <p className="text-sm font-bold tracking-[0.25em] uppercase text-white text-center">
           Organic · Raw · Unfiltered
         </p>
-      </motion.div>
-    </div>
+      </div>
+    </>
   )
 }

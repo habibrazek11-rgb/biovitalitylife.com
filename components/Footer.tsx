@@ -71,7 +71,7 @@ export default function Footer() {
               Premium organic prickly pear vinegar from Tunisia. Raw, unfiltered, with the Mother.
             </p>
             {/* Social */}
-            <div className="flex gap-2">
+            <div className="flex gap-2 justify-center md:justify-start">
               {socialLinks.map((s) => (
                 <a
                   key={s.label}
@@ -111,17 +111,14 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Services + Contact */}
           <div>
             <h4 className="text-white font-bold text-xs md:text-sm mb-2 md:mb-4">Our Services</h4>
-            <ul className="space-y-1.5 md:space-y-2.5" role="list">
+            <ul className="space-y-1.5 md:space-y-2.5 mb-6" role="list">
               <li><span className="text-white/60 text-xs md:text-sm">Private Label Solutions</span></li>
               <li><span className="text-white/60 text-xs md:text-sm">Bulk & Wholesale</span></li>
             </ul>
-          </div>
 
-          {/* Contact */}
-          <div>
             <h4 className="text-white font-bold text-xs md:text-sm mb-2 md:mb-4">Contact Us</h4>
             <ul className="space-y-2 md:space-y-3" role="list">
               <li className="flex items-start gap-2.5">

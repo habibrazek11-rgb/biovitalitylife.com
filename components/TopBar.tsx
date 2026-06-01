@@ -36,7 +36,7 @@ export default function TopBar() {
     }
   }, [visible])
 
-  const text = '🌿 Free shipping on orders over AED 200  |  contact@biovitalitylife.com  |  +971 50 185 9905'
+  const text = '🌿 Free shipping on orders over AED 300  |  contact@biovitalitylife.com  |  +971 50 185 9905'
 
   return (
     <div

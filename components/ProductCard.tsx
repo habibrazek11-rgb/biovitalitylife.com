@@ -27,6 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       name: product.name,
       line: product.line,
       price: product.price,
+      currency: product.currency,
       image: product.images[0] ?? '',
     })
     showToast(`${product.line === 'pharma' ? 'Pharma Line' : 'Food Line'} added to cart`)

@@ -18,7 +18,7 @@ const steps = [
   },
   {
     number: '3',
-    image: '/how-to-use/bowl_salad.jpeg',
+    image: '/how-to-use/bowl_salad.png',
     title: 'Drink',
     description: 'Enjoy in the morning on an empty stomach.',
   },

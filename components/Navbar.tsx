@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { useUser } from '@clerk/nextjs'
 import { useSyncUser } from '@/lib/useSyncUser'
+import CurrencySwitcher from '@/components/CurrencySwitcher'
 
 const navLinks = [
   { href: '/', label: 'HOME' },
@@ -160,6 +161,13 @@ export default function Navbar() {
               </Link>
             )}
 
+            {/* Currency switcher — shop pages only */}
+            {pathname.startsWith('/shop') && (
+              <div className="hidden lg:block">
+                <CurrencySwitcher />
+              </div>
+            )}
+
             {/* Shop CTA — desktop only */}
             <Link
               href="/shop"
@@ -287,7 +295,14 @@ export default function Navbar() {
             </nav>
 
             {/* Drawer footer CTA */}
-            <div className="px-6 py-6" style={{ borderTop: '1px solid rgba(107,123,94,0.15)' }}>
+            <div className="px-6 py-6 space-y-3" style={{ borderTop: '1px solid rgba(107,123,94,0.15)' }}>
+              {/* Currency switcher — shop pages only */}
+              {pathname.startsWith('/shop') && (
+                <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-2.5">
+                  <span className="text-xs font-bold tracking-widest uppercase text-[var(--color-muted)]">Currency</span>
+                  <CurrencySwitcher />
+                </div>
+              )}
               <Link
                 href="/shop"
                 onClick={() => setDrawerOpen(false)}
@@ -299,8 +314,8 @@ export default function Navbar() {
                 <ShoppingCart size={16} aria-hidden="true" />
                 Shop Now
               </Link>
-              <p className="mt-4 text-center text-xs text-[var(--color-muted)]">
-                Free shipping over AED 200 🌿
+              <p className="text-center text-xs text-[var(--color-muted)]">
+                Free shipping over AED 300 🌿
               </p>
             </div>
           </motion.aside>

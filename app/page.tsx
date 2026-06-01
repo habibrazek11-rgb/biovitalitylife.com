@@ -19,7 +19,7 @@ import ToastProvider from '@/components/ui/ToastProvider'
 export const metadata: Metadata = {
   title: 'BioVitality™ – Pure Organic Prickly Pear Vinegar',
   description:
-    'Discover BioVitality™ — premium organic prickly pear vinegar from Tunisia. Raw, unfiltered, with the Mother. For detox, gut health and Mediterranean cuisine. Free shipping over AED 200.',
+    'Discover BioVitality™ — premium organic prickly pear vinegar from Tunisia. Raw, unfiltered, with the Mother. For detox, gut health and Mediterranean cuisine. Free shipping over AED 300.',
   openGraph: {
     title: 'BioVitality™ – Pure Organic Prickly Pear Vinegar',
     description:

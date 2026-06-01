@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { Minus, Plus, ShoppingCart, CheckCircle, Shield, Truck, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
+import { useCurrencyStore, convertPrice } from '@/store/currencyStore'
 
 interface Product {
   id: string
@@ -73,6 +74,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
   })
   const addItem = useCartStore((s) => s.addItem)
   const { showToast } = useToast()
+  const { currency } = useCurrencyStore()
   const details = parseDescription(product.description)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -93,6 +95,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
         name: product.name,
         line: product.line as 'pharma' | 'food',
         price: product.price,
+        currency: product.currency,
         image: product.images[0] ?? '',
       })
     }
@@ -220,8 +223,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
                 {/* Price */}
                 <div className="mb-4">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-sm text-gray-500">{product.currency}</span>
-                    <span className="text-3xl font-bold text-gray-900">{product.price}</span>
+                    <span className="text-3xl font-bold text-gray-900">{convertPrice(product.price, currency)}</span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">All prices include VAT.</p>
                 </div>
@@ -394,8 +396,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
                 {/* Price */}
                 <div className="mb-4">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-sm text-gray-500">{product.currency}</span>
-                    <span className="text-2xl font-bold text-gray-900">{product.price}</span>
+                    <span className="text-2xl font-bold text-gray-900">{convertPrice(product.price, currency)}</span>
                   </div>
                 </div>
 
@@ -403,7 +404,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
                 <div className="mb-4 space-y-2 text-sm">
                   <div className="flex items-center gap-2 text-gray-600">
                     <Truck size={15} className="text-[#084e46] shrink-0" />
-                    <span>Free delivery on orders over AED 200</span>
+                    <span>Free delivery on orders over AED 300</span>
                   </div>
                 </div>
 
@@ -532,7 +533,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
                       {p.name}
                     </h3>
                     <p className="mt-1 text-lg font-bold text-gray-900">
-                      {p.currency} {p.price}
+                      {convertPrice(p.price, currency)}
                     </p>
                     {p.inStock && (
                       <p className="mt-0.5 text-xs text-green-600 font-medium">In Stock</p>

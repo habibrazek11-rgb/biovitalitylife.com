@@ -49,7 +49,7 @@ export default function TermsPage() {
             <section>
               <h2 className="font-heading text-xl font-bold text-[var(--color-dark)] mb-3">4. Shipping and Delivery</h2>
               <ul className="list-disc pl-5 space-y-2">
-                <li>We offer free shipping on orders over AED 200 within the UAE.</li>
+                <li>We offer free shipping on orders over AED 300 within the UAE.</li>
                 <li>Delivery times are estimates and may vary due to factors outside our control.</li>
                 <li>Risk of loss and title for products pass to you upon delivery.</li>
                 <li>We are not responsible for delays caused by customs, weather, or carrier issues.</li>

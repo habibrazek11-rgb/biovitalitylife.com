@@ -13,7 +13,7 @@ const lines = [
   },
   {
     image: '/Gourmet Line/Gourmet LINE BIOVITALITY.jpg',
-    title: 'Premium Selection',
+    title: 'Gourmet Selection',
     description: 'Elevate your meals with gourmet flavor.',
     href: '/shop/biovitality-organic-prickly-pear-vinegar-250ml-food-line-raw-unfiltered-wellness-vinegar',
   },
@@ -35,7 +35,7 @@ export default function ProductLines() {
             Explore Our Collection
           </p>
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-[var(--color-dark)]">
-            Gourmet Line
+            Pure & Organic
           </h2>
         </motion.div>
 

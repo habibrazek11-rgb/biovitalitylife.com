@@ -7,7 +7,7 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Shield, Truck, RotateCcw 
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
 
-const SHIPPING_THRESHOLD = 200
+const SHIPPING_THRESHOLD = 300
 const SHIPPING_COST = 25
 
 export default function CartContent() {
@@ -18,6 +18,7 @@ export default function CartContent() {
   const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST
   const total = subtotal + shipping
   const progressPct = Math.min((subtotal / SHIPPING_THRESHOLD) * 100, 100)
+  const currency = items[0]?.currency || 'AED'
 
   const handleRemove = (id: string, name: string) => {
     removeItem(id)
@@ -128,7 +129,7 @@ export default function CartContent() {
                           </button>
                         </div>
                         <span className="text-base font-bold text-[var(--color-dark)]">
-                          AED {item.price * item.quantity}
+                          {item.currency} {item.price * item.quantity}
                         </span>
                       </div>
                     </div>
@@ -139,7 +140,7 @@ export default function CartContent() {
               {/* Trust badges */}
               <div className="grid grid-cols-3 gap-3 pt-2">
                 {[
-                  { icon: Truck, text: 'Free over AED 200' },
+                  { icon: Truck, text: 'Free over AED 300' },
                   { icon: Shield, text: 'Secure checkout' },
                   { icon: RotateCcw, text: 'Easy returns' },
                 ].map((b) => (

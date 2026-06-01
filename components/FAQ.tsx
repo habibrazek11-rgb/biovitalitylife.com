@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     question: 'Do you ship internationally?',
-    answer: 'Yes, we ship across the UAE with free delivery on orders over AED 200. We also ship internationally — contact us for rates to your country.',
+    answer: 'Yes, we ship across the UAE with free delivery on orders over AED 300. We also ship internationally — contact us for rates to your country.',
   },
   {
     question: 'What is the difference between Pharma Line and Food Line?',

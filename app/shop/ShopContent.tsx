@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
+import { useCurrencyStore, convertPrice } from '@/store/currencyStore'
 
 interface Product {
   id: string
@@ -36,6 +37,7 @@ export default function ShopContent() {
   const [loading, setLoading] = useState(true)
   const addItem = useCartStore((s) => s.addItem)
   const { showToast } = useToast()
+  const { currency } = useCurrencyStore()
 
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -73,6 +75,7 @@ export default function ShopContent() {
       name: product.name,
       line: product.line as 'pharma' | 'food',
       price: product.price,
+      currency: product.currency,
       image: product.images[0] ?? '',
     })
     showToast(`${product.name} added to cart`)
@@ -174,11 +177,7 @@ export default function ShopContent() {
 
                       {/* Price */}
                       <div className="mt-2 flex items-baseline">
-                        <span className="text-xs text-[#0f1111] align-top">{product.currency}</span>
-                        <span className="text-2xl font-bold text-[#0f1111] ml-0.5">{Math.floor(product.price)}</span>
-                        <span className="text-xs text-[#0f1111] align-top ml-0.5">
-                          {(product.price % 1).toFixed(2).substring(1)}
-                        </span>
+                        <span className="text-2xl font-bold text-[#0f1111] ml-0.5">{convertPrice(product.price, currency)}</span>
                       </div>
 
                       {/* Delivery */}

@@ -13,6 +13,7 @@ export interface CartItem {
   name: string
   line: 'pharma' | 'food'
   price: number
+  currency: string
   quantity: number
   image: string
 }

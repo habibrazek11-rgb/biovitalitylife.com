@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Lock, CreditCard, CheckCircle } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 
-const SHIPPING_THRESHOLD = 200
+const SHIPPING_THRESHOLD = 300
 const SHIPPING_COST = 25
 
 /**

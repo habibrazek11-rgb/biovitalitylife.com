@@ -24,6 +24,7 @@ const navItems = [
   { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/categories', label: 'Categories', icon: FolderOpen },
+  { href: '/admin/blog', label: 'Blog', icon: MessageSquare },
   { href: '/admin/customers', label: 'Customers', icon: Users },
   { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { href: '/admin/settings', label: 'Settings', icon: Settings },

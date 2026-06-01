@@ -105,13 +105,31 @@ export default function HeroSection() {
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-3 md:gap-4 mb-10 mt-auto md:mt-0">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-3 md:gap-4 mb-8 mt-auto md:mt-0">
             <Link href="/shop" className="btn-primary">
               Shop Now →
             </Link>
             <Link href="/about" className="hidden md:inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-md border-2 border-[#084e46] text-[#084e46] hover:bg-[#084e46] hover:text-white transition-all duration-200 min-w-[180px]">
               Learn Benefits
             </Link>
+          </div>
+
+          {/* Certification badges */}
+          <div className="flex md:hidden items-center gap-4">
+            <Image
+              src="/certification/cropped-cropped-BioVitality%E2%84%A2-Organic-Ecocert-certificate.png"
+              alt="Ecocert Organic Certification"
+              width={64}
+              height={64}
+              className="h-14 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+            />
+            <Image
+              src="/certification/cropped-cropped-BioVitality%E2%84%A2-Organic-certificate.png"
+              alt="Organic Certification"
+              width={64}
+              height={64}
+              className="h-14 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+            />
           </div>
         </motion.div>
       </div>

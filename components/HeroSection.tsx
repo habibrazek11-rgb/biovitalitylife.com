@@ -115,21 +115,24 @@ export default function HeroSection() {
           </div>
 
           {/* Certification badges */}
-          <div className="flex md:hidden items-center gap-4">
-            <Image
-              src="/certification/cropped-cropped-BioVitality%E2%84%A2-Organic-Ecocert-certificate.png"
-              alt="Ecocert Organic Certification"
-              width={64}
-              height={64}
-              className="h-14 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
-            />
-            <Image
-              src="/certification/cropped-cropped-BioVitality%E2%84%A2-Organic-certificate.png"
-              alt="Organic Certification"
-              width={64}
-              height={64}
-              className="h-14 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
-            />
+          <div className="flex md:hidden items-center gap-3">
+            {[
+              { src: '/certification/cropped-cropped-BioVitality%E2%84%A2-Organic-Ecocert-certificate.png', alt: 'Ecocert Organic Certification' },
+              { src: '/certification/cropped-cropped-BioVitality%E2%84%A2-Organic-certificate.png', alt: 'Organic Certification' },
+            ].map((cert) => (
+              <div
+                key={cert.alt}
+                className="flex items-center justify-center rounded-xl bg-white/90 backdrop-blur-sm shadow-md p-2.5"
+              >
+                <Image
+                  src={cert.src}
+                  alt={cert.alt}
+                  width={64}
+                  height={64}
+                  className="h-12 w-auto object-contain"
+                />
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

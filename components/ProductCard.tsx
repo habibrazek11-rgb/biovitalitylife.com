@@ -7,6 +7,8 @@ import { ShoppingCart } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
 import StarRating from '@/components/ui/StarRating'
+import { useCurrencyStore, convertPrice } from '@/store/currencyStore'
+import type { Currency } from '@/store/currencyStore'
 import type { Product } from '@/lib/products'
 
 interface ProductCardProps {
@@ -19,6 +21,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem)
   const { showToast } = useToast()
+  const { currency, setCurrency } = useCurrencyStore()
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -84,9 +87,26 @@ export default function ProductCard({ product }: ProductCardProps) {
         <StarRating rating={product.rating} reviewCount={product.reviewCount} />
 
         <div className="mt-auto pt-4 flex items-center justify-between">
-          <span className="font-heading text-2xl font-bold text-[var(--color-dark)]">
-            {product.currency} {product.price}
-          </span>
+          <div className="flex flex-col gap-1.5">
+            <span className="font-heading text-2xl font-bold text-[var(--color-dark)]">
+              {convertPrice(product.price, currency)}
+            </span>
+            <div className="flex items-center gap-1">
+              {(['AED', 'USD', 'EUR'] as Currency[]).map((c) => (
+                <button
+                  key={c}
+                  onClick={(e) => { e.preventDefault(); setCurrency(c) }}
+                  className={`px-1.5 py-0.5 text-[10px] rounded-full border transition-all ${
+                    currency === c
+                      ? 'bg-[#084e46] text-white border-[#084e46]'
+                      : 'text-gray-400 border-gray-200 hover:border-gray-400'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
           <button
             onClick={handleAddToCart}
             className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white

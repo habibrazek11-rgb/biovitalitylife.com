@@ -8,6 +8,7 @@ import { Minus, Plus, ShoppingCart, CheckCircle, Shield, Truck, RotateCcw, Chevr
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useCurrencyStore, convertPrice } from '@/store/currencyStore'
+import type { Currency } from '@/store/currencyStore'
 
 interface Product {
   id: string
@@ -74,7 +75,7 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
   })
   const addItem = useCartStore((s) => s.addItem)
   const { showToast } = useToast()
-  const { currency } = useCurrencyStore()
+  const { currency, setCurrency } = useCurrencyStore()
   const details = parseDescription(product.description)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -222,8 +223,23 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
 
                 {/* Price */}
                 <div className="mb-4">
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-3xl font-bold text-gray-900">{convertPrice(product.price, currency)}</span>
+                    <div className="flex items-center gap-1">
+                      {(['AED', 'USD', 'EUR'] as Currency[]).map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => setCurrency(c)}
+                          className={`px-2 py-0.5 text-xs rounded-full border transition-all ${
+                            currency === c
+                              ? 'bg-[#084e46] text-white border-[#084e46]'
+                              : 'text-gray-400 border-gray-200 hover:border-gray-400'
+                          }`}
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">All prices include VAT.</p>
                 </div>
@@ -395,8 +411,23 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
               >
                 {/* Price */}
                 <div className="mb-4">
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-2xl font-bold text-gray-900">{convertPrice(product.price, currency)}</span>
+                    <div className="flex items-center gap-1">
+                      {(['AED', 'USD', 'EUR'] as Currency[]).map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => setCurrency(c)}
+                          className={`px-2 py-0.5 text-xs rounded-full border transition-all ${
+                            currency === c
+                              ? 'bg-[#084e46] text-white border-[#084e46]'
+                              : 'text-gray-400 border-gray-200 hover:border-gray-400'
+                          }`}
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 

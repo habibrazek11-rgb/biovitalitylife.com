@@ -142,7 +142,28 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/10 pt-6">
+        <div className="border-t border-white/10 pt-6 space-y-4">
+          {/* Payment methods */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {[
+              'Visa', 'Mastercard', 'PayPal', 'ApplePay', 'GooglePay',
+              'AmazonPay', 'Amex', 'Discover', 'Stripe', 'Skrill',
+            ].map((method) => (
+              <div
+                key={method}
+                className="flex items-center justify-center h-9 px-2 rounded bg-white/10"
+              >
+                <Image
+                  src={`/payment-methodes/${method}.png`}
+                  alt={method}
+                  width={52}
+                  height={32}
+                  className="h-6 w-auto object-contain"
+                />
+              </div>
+            ))}
+          </div>
+
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-white/40 text-xs">
               © 2026 BioVitality™. All rights reserved.

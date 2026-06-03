@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { useToast } from '@/components/ui/ToastProvider'
 import { useCurrencyStore, convertPrice } from '@/store/currencyStore'
+import type { Currency } from '@/store/currencyStore'
 
 interface Product {
   id: string
@@ -26,8 +27,8 @@ type Filter = 'all' | 'pharma' | 'food'
 
 const filters: { value: Filter; label: string }[] = [
   { value: 'all', label: 'All Products' },
-  { value: 'pharma', label: 'Pharma Line' },
-  { value: 'food', label: 'Food Line' },
+  { value: 'pharma', label: 'Wellness Line' },
+  { value: 'food', label: 'Gourmet Line' },
 ]
 
 export default function ShopContent() {
@@ -37,7 +38,7 @@ export default function ShopContent() {
   const [loading, setLoading] = useState(true)
   const addItem = useCartStore((s) => s.addItem)
   const { showToast } = useToast()
-  const { currency } = useCurrencyStore()
+  const { currency, setCurrency } = useCurrencyStore()
 
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -176,8 +177,23 @@ export default function ShopContent() {
                       </h3>
 
                       {/* Price */}
-                      <div className="mt-2 flex items-baseline">
-                        <span className="text-2xl font-bold text-[#0f1111] ml-0.5">{convertPrice(product.price, currency)}</span>
+                      <div className="mt-2 flex items-center gap-2 flex-wrap">
+                        <span className="text-2xl font-bold text-[#0f1111]">{convertPrice(product.price, currency)}</span>
+                        <div className="flex items-center gap-1">
+                          {(['AED', 'USD', 'EUR'] as Currency[]).map((c) => (
+                            <button
+                              key={c}
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrency(c) }}
+                              className={`px-1.5 py-0.5 text-[10px] rounded-full border transition-all ${
+                                currency === c
+                                  ? 'bg-[#084e46] text-white border-[#084e46]'
+                                  : 'text-gray-400 border-gray-200 hover:border-gray-400'
+                              }`}
+                            >
+                              {c}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Delivery */}

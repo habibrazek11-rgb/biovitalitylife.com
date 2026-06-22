@@ -84,8 +84,17 @@ export default function ShopContent() {
 
   return (
     <>
-      {/* Page header */}
-      <section className="pt-36 px-6 bg-white" aria-label="Shop header">
+      {/* Banner */}
+      <section className="pt-28 bg-white" aria-label="Shop banner">
+        <Image
+          src="/biovitality-banner.png"
+          alt="BioVitality Shop Banner"
+          width={2172}
+          height={724}
+          sizes="100vw"
+          className="w-full h-auto"
+          priority
+        />
       </section>
 
       {/* Search + Filter + grid */}

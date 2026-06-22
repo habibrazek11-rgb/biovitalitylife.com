@@ -112,12 +112,15 @@ export default function ProductDetailPage({ product, relatedProducts }: Props) {
             <ol className="flex items-center gap-1.5 flex-wrap">
               <li><Link href="/shop" className="hover:text-[#084e46] transition-colors">Shop</Link></li>
               <li className="text-gray-300">/</li>
-              {product.category && (
-                <>
-                  <li><span className="hover:text-[#084e46] transition-colors">{product.category.name}</span></li>
-                  <li className="text-gray-300">/</li>
-                </>
-              )}
+              <li>
+                <Link
+                  href={`/shop?line=${product.line}`}
+                  className="hover:text-[#084e46] transition-colors"
+                >
+                  {product.line === 'pharma' ? 'Wellness Line' : product.line === 'food' ? 'Gourmet Line' : product.line}
+                </Link>
+              </li>
+              <li className="text-gray-300">/</li>
               <li className="text-gray-900 font-medium truncate max-w-[200px]">{product.name}</li>
             </ol>
           </nav>

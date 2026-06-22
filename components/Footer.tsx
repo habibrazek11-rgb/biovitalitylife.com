@@ -111,14 +111,17 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services + Contact */}
+          {/* Our Services */}
           <div>
             <h4 className="text-white font-bold text-xs md:text-sm mb-2 md:mb-4">Our Services</h4>
-            <ul className="space-y-1.5 md:space-y-2.5 mb-6" role="list">
+            <ul className="space-y-1.5 md:space-y-2.5" role="list">
               <li><span className="text-white/60 text-xs md:text-sm">Private Label Solutions</span></li>
               <li><span className="text-white/60 text-xs md:text-sm">Bulk & Wholesale</span></li>
             </ul>
+          </div>
 
+          {/* Contact Us — own column on desktop, stacks below on mobile */}
+          <div className="col-span-2 md:col-span-1">
             <h4 className="text-white font-bold text-xs md:text-sm mb-2 md:mb-4">Contact Us</h4>
             <ul className="space-y-2 md:space-y-3" role="list">
               <li className="flex items-start gap-2.5">

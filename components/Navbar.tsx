@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { ShoppingCart, Menu, X, User } from 'lucide-react'
+import { ShoppingCart, Menu, X, User, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { useUser } from '@clerk/nextjs'
@@ -71,16 +71,24 @@ export default function Navbar() {
           className="mx-auto flex max-w-7xl items-center px-6 py-5 lg:py-6 relative"
           aria-label="Main navigation"
         >
-          {/* ── Mobile: Hamburger (left) ── */}
-          <button
-            className={`md:hidden p-2 rounded-full transition-all duration-200
-              ${textColor} ${hoverColor} hover:bg-white/10`}
-            onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={drawerOpen}
-          >
-            <Menu size={22} strokeWidth={1.8} />
-          </button>
+          {/* ── Mobile: Hamburger + Search (left) ── */}
+          <div className="flex items-center gap-1 md:hidden">
+            <button
+              className={`p-2 rounded-full transition-all duration-200 ${textColor} ${hoverColor} hover:bg-white/10`}
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={drawerOpen}
+            >
+              <Menu size={22} strokeWidth={1.8} />
+            </button>
+            <Link
+              href="/shop"
+              className={`p-2 rounded-full transition-all duration-200 ${textColor} ${hoverColor} hover:bg-white/10`}
+              aria-label="Search products"
+            >
+              <Search size={20} strokeWidth={1.8} />
+            </Link>
+          </div>
 
           {/* ── Desktop links (left) ── */}
           <ul className="hidden md:flex items-center gap-0.5" role="list">
@@ -177,6 +185,15 @@ export default function Navbar() {
               style={{ backgroundColor: '#084e46' }}
             >
               Shop Now
+            </Link>
+
+            {/* User icon — mobile only */}
+            <Link
+              href={isSignedIn ? '/account' : '/sign-in'}
+              className={`md:hidden p-2 rounded-full transition-all duration-200 ${textColor} ${hoverColor} hover:bg-white/10`}
+              aria-label={isSignedIn ? 'My account' : 'Sign in'}
+            >
+              <User size={20} strokeWidth={1.8} />
             </Link>
 
             {/* Cart icon */}
